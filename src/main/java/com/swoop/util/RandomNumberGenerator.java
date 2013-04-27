@@ -23,6 +23,15 @@ public interface RandomNumberGenerator
 	public int nextInt();
 
 	/**
+	 * Returns the next pseudorandom, uniformly distributed <code>long</code>
+	 * value from this random number generator's sequence.
+	 *
+	 * @return	the next pseudorandom, uniformly distributed <code>long</code>
+	 *			value from this random number generator's sequence.
+	 */
+	public long nextLong();
+
+	/**
 	 * Returns the next pseudorandom, uniformly distributed 
 	 * <code>double</code> value between <code>0.0</code> and
 	 * <code>1.0</code> from this random number generator's sequence.

@@ -22,6 +22,12 @@ public class RiggedRandomNumberGenerator
 	}
 
 	@Override
+	public long nextLong()
+	{
+		return (nextInt() << 32L) + nextInt();
+	}
+
+	@Override
 	public double nextDouble()
 	{
 		return value;

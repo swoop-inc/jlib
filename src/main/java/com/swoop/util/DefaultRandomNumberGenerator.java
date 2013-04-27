@@ -2,7 +2,7 @@ package com.swoop.util;
 
 /**
  * Default implementation of RandomNumberGenerator, based on the 
- * number generator.
+ * Java random number generator.
  * @see java.util.Random
  */
 public class DefaultRandomNumberGenerator
