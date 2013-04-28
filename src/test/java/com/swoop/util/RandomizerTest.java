@@ -9,25 +9,25 @@ public class RandomizerTest
 	@Test
 	public void testSelectAmongNone() throws Exception
 	{
-		assertEquals(-1, new Randomizer().select(new WeightedChoiceAdapter(new double[0])));
+		assertNull(new Randomizer().select(new WeightedChoiceAdapter(new double[0])));
 	}
 
 	@Test
 	public void testSelectAmongZero() throws Exception
 	{
-		assertEquals(-1, new Randomizer().select(new WeightedChoiceAdapter(new double[] { 0 })));
+		assertNull(new Randomizer().select(new WeightedChoiceAdapter(new double[] { 0 })));
 	}
 
 	@Test
 	public void testSelectAmongZeroes() throws Exception
 	{
-		assertEquals(-1, new Randomizer().select(new WeightedChoiceAdapter(new double[] { 0, 0 })));
+		assertNull(new Randomizer().select(new WeightedChoiceAdapter(new double[] { 0, 0 })));
 	}
 
 	@Test
 	public void testSelectAmongOne() throws Exception
 	{
-		assertEquals(0, new Randomizer().select(new WeightedChoiceAdapter(new double[] { 10 })));
+		assertEquals(0, new Randomizer().select(new WeightedChoiceAdapter(new double[] { 10 })).intValue());
 	}
 
 	@Test
@@ -36,7 +36,7 @@ public class RandomizerTest
 		Randomizer rand = new Randomizer(new RiggedRandomNumberGenerator(0));
 		assertEquals(0, rand.select(new WeightedChoiceAdapter(new double[] {
 			1.0, 2.0, 4.0, 8.0, 16.0
-		})));
+		})).intValue());
 	}
 
 	@Test
@@ -45,7 +45,7 @@ public class RandomizerTest
 		Randomizer rand = new Randomizer(new RiggedRandomNumberGenerator(0.5));
 		assertEquals(3, rand.select(new WeightedChoiceAdapter(new double[] {
 			1.0, 2.0, 4.0, 8.0, 14.0
-		})));
+		})).intValue());
 	}
 
 	@Test
@@ -54,11 +54,11 @@ public class RandomizerTest
 		Randomizer rand = new Randomizer(new RiggedRandomNumberGenerator(1.0));
 		assertEquals(4, rand.select(new WeightedChoiceAdapter(new double[] {
 			1.0, 2.0, 4.0, 8.0, 14.0
-		})));
+		})).intValue());
 	}
 
 	private static class WeightedChoiceAdapter
-		implements WeightedChoiceIterator
+		implements WeightedChoiceIterator<Integer>
 	{
 		double[] weights;
 		int index;
@@ -81,7 +81,7 @@ public class RandomizerTest
 		}
 
 		@Override
-		public int getCurrentIndex()
+		public Integer getCurrentValue()
 		{
 			return index - 1;
 		}

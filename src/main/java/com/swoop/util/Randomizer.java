@@ -27,17 +27,17 @@ public class Randomizer
 	 * @param weights
 	 * @return  the index of the selected item, or -1 if no item was selected
 	 */
-	public int select(WeightedChoiceIterator choices)
+	public <V> V select(WeightedChoiceIterator<V> choices)
 	{
 		double runningTotalWeight = 0.0;
-		int candidate = -1;
+		V candidate = null;
 		while (choices.hasNext()) {
 			double prevTotalWeight = runningTotalWeight;
 			double weight = choices.nextWeight();
 			if (weight > 0.0) {
 				runningTotalWeight += weight;
 				if ((rng.nextDouble() * runningTotalWeight) >= prevTotalWeight) {
-					candidate = choices.getCurrentIndex();
+					candidate = choices.getCurrentValue();
 				}
 			}
 		}
