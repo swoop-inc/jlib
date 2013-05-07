@@ -25,4 +25,14 @@ public class DefaultRandomNumberGeneratorTest
 		RandomNumberGenerator rng2 = new DefaultRandomNumberGenerator(123456789L);
 		assertEquals(rng1.nextInt(), rng2.nextInt());
 	}
+
+	@Test
+	public void testRangeOfNextDouble() throws Exception
+	{
+		RandomNumberGenerator rng = new DefaultRandomNumberGenerator();
+		for (int i = 0; i < 1000; ++i) {
+			assertTrue(rng.nextDouble() >= 0.0);
+			assertTrue(rng.nextDouble() < 1.0);
+		}
+	}
 }

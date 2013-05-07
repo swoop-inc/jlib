@@ -57,6 +57,26 @@ public class RandomizerTest
 		})).intValue());
 	}
 
+	@Test
+	public void testRandomnessOfSelection() throws Exception
+	{
+		double[] weights = { 1.0, 4.0, 16.0, 64.0, 256.0 };
+		boolean[] covered = new boolean[weights.length];
+		int ncovered = 0;
+		Randomizer rand = new Randomizer();
+		for (int trials = 0; trials < 1000000; ++trials) {
+			int sel = rand.select(new WeightedChoiceAdapter(weights));
+			if (!covered[sel]) {
+				covered[sel] = true;
+				ncovered += 1;
+				if (ncovered == weights.length) {
+					return;
+				}
+			}
+		}
+		fail("should not be reached");
+	}
+
 	private static class WeightedChoiceAdapter
 		implements WeightedChoiceIterator<Integer>
 	{
