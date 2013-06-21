@@ -1,9 +1,10 @@
 package com.swoop.data.redis;
 
+import com.swoop.data.util.Connection;
+import com.swoop.data.util.ConnectionMonitor;
+
 import java.io.IOException;
 
-// TODO: try using the redis-protocol driver for better efficiency
-import redis.clients.jedis.BinaryJedis;
 import redis.clients.jedis.BinaryJedisCommands;
 import redis.clients.jedis.exceptions.JedisException;
 
@@ -13,69 +14,51 @@ import redis.clients.jedis.exceptions.JedisException;
 public class DefaultRedisConnector
 	implements RedisConnector
 {
-	private RedisConnectorConfig config;
-	private BinaryJedis jedis;
+	private ConnectionMonitor<BinaryJedisCommands> conn;
 
 	public DefaultRedisConnector()
 	{
-		this.config = new RedisConnectorConfig();
+		this(new RedisConnection());
 	}
 
 	public DefaultRedisConnector(RedisConnectorConfig config)
 	{
-		this.config = config.copy();
+		this(new RedisConnection(config.copy()));
 	}
 
+	/**
+	 * Allows for mocking of Redis connection.
+	 */
+	public DefaultRedisConnector(Connection<BinaryJedisCommands> connection)
+	{
+		this.conn = new ConnectionMonitor<BinaryJedisCommands>(connection);
+	}
+
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	public final <T> T execute(RedisCommand<T> command)
 		throws IOException
 	{
-		// This initial implementation reconnects for every command!  
-		// TODO: add multi-threading, synchronization, and connection pooling.
-		BinaryJedisCommands jedis = connect();
 		try {
-			return command.execute(jedis);
+			BinaryJedisCommands jedis = conn.use();
+			try {
+				return command.execute(jedis);
+			}
+			finally {
+				conn.release();
+			}
 		}
 		catch (JedisException e) {
+			// Wrap all exceptions thrown by the driver in IOExceptions.
 			throw new IOException(this + ": " + command + ": data transfer error", e);
 		}
-		finally {
-			disconnect();
-		}
-	}
-
-	/**
-	 * Exposed for mockery.
-	 */
-	protected BinaryJedisCommands connect()
-		throws IOException
-	{
-		try {
-			jedis = new BinaryJedis(config.getHost(), config.getPort(), config.getTimeoutMillis());
-			// select() implicitly connects.  Set authentication info first.
-			if (config.getPassword() != null) {
-				jedis.auth(config.getPassword());
-			}
-			jedis.select(config.getDatabase());
-			jedis.connect();
-			return jedis;
-		}
-		catch (JedisException e) {
-			throw new IOException(config.toString() + ": connection error", e);
-		}
-	}
-
-	/**
-	 * Exposed for mockery.
-	 */
-	protected void disconnect()
-	{
-		jedis.disconnect();
 	}
 
 	@Override
 	public String toString()
 	{
-		return config.toString();
+		return conn.toString();
 	}
 }

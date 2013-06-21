@@ -1,35 +1,59 @@
 package com.swoop.data.mongo;
 
 import com.mongodb.DB;
-import com.mongodb.Mongo;
 import com.mongodb.MongoException;
-import com.mongodb.MongoURI;
-import com.mongodb.ReadPreference;
+
+import com.swoop.data.util.Connection;
+import com.swoop.data.util.ConnectionMonitor;
 
 import java.io.IOException;
 
 /**
- * Manager of MongoCollection objects.
+ * Default implementation of MongoConnector, based on the MongoDB Java driver.
  */
 public class DefaultMongoConnector
 	implements MongoConnector
 {
-	private final static int MAX_IDLE_MILLIS = 10 * 1000;
+	private ConnectionMonitor<DB> conn;
 
-	private MongoURI uri;
-	private int useCount;
-	private Thread idleTimer;
-	private Mongo mongo;
-	private DB db;
-
+	/**
+	 * Constructor.  Connects to the default MongoDB database.
+	 */
 	public DefaultMongoConnector()
 	{
-		this.uri = new MongoURI("mongodb://localhost");
+		this(new MongoConnection());
 	}
 
+	/**
+	 * Constructor.  Connects to the database as specified by the URI string, which must conform to 
+	 * MongoDB URI specifications.
+	 * @param uriString  a MongoDB "URI"
+	 */
 	public DefaultMongoConnector(String uriString)
 	{
-		this.uri = new MongoURI(uriString);
+		this(new MongoConnection(uriString));
+	}
+
+	/**
+	 * Constructor.  Enables mocking of the MongoDB connection.
+	 */
+	protected DefaultMongoConnector(Connection<DB> connection)
+	{
+		this.conn = new ConnectionMonitor<DB>(connection);
+	}
+
+	/**
+	 * The maximum time a connection managed by this connector is allowed to remain idle, before it
+	 * is automatically closed.
+	 */
+	public int getMaxIdleMillis()
+	{
+		return conn.getMaxIdleMillis();
+	}
+
+	public void setMaxIdleMillis(int maxIdleMillis)
+	{
+		conn.setMaxIdleMillis(maxIdleMillis);
 	}
 
 	/**
@@ -39,14 +63,16 @@ public class DefaultMongoConnector
 		throws IOException
 	{
 		try {
+			DB db = conn.use();
 			try {
-				return command.execute(useDb());
+				return command.execute(db);
 			}
 			finally {
-				release();
+				conn.release();
 			}
 		}
 		catch (MongoException e) {
+			// Wrap all MongoExceptions thrown by the driver in IOExceptions
 			throw new IOException(e);
 		}
 	}
@@ -67,112 +93,9 @@ public class DefaultMongoConnector
 		});
 	}
 
+	@Override
 	public String toString()
 	{
-		// DO NOT LEAK PASSWORD HERE!
-		return "[MongoConnector:" + uri.getHosts() + "," + uri.getDatabase() + "]";
-	}
-
-	private synchronized DB useDb()
-		throws IOException, MongoException
-	{
-		cancelIdleTimeout();
-		++useCount;
-		if (!isOpen()) {
-			open();
-		}
-		return db;
-	}
-
-	private synchronized void release()
-	{
-		switch (useCount) {
-		case 0:
-			throw new IllegalStateException("useCount");
-		case 1:
-			startIdleTimeout();
-		default:
-			--useCount;
-		}
-	}
-
-	private void startIdleTimeout()
-	{
-		if (idleTimer != null) {
-			throw new IllegalStateException("idleTimer");
-		}
-		(idleTimer = new IdleTimerThread()).start();
-	}
-
-	private void cancelIdleTimeout()
-	{
-		if (idleTimer != null) {
-			idleTimer.interrupt();
-			idleTimer = null;
-		}
-	}
-
-	private synchronized boolean isOpen()
-	{
-		return db != null;
-	}
-
-	private void open()
-		throws IOException, MongoException
-	{
-		try {
-			this.mongo = uri.connect();
-			this.mongo.setReadPreference(ReadPreference.SECONDARY);
-			String database = uri.getDatabase();
-			if (database == null) {
-				throw new IOException("no DB specified");
-			}
-			this.db = this.mongo.getDB(database);
-			authenticate(uri);
-		}
-		catch (java.net.UnknownHostException e) {  // why this type doesn't extend IOException beats me.
-			throw new IOException(e);
-		}
-	}
-
-	//
-	// Note a flaw in this system: while we separately cache Mongo DB connections per
-	// DatabaseSpec, which includes user name / password, the Mongo driver internally 
-	// caches Mongo DB connections per network address.  So here we may receive a DB
-	// object that has already been authenticated.  It's quite possible to configure 
-	// several different DB connections with varying authentication info, which can lead
-	// to mysterious failures - mysterious because they would depend on the order in which
-	// the server makes the connections.
-	//
-	private void authenticate(MongoURI uri)
-	{
-		String userName = uri.getUsername();
-		if (userName != null && userName.length() > 0 && !db.isAuthenticated()) {
-			db.authenticate(userName, uri.getPassword());
-		}
-	}
-
-	private synchronized void close()
-	{
-		// Double-check state, in case this current thread was context-switched-out poised ready to close. 
-		if (useCount == 0 && isOpen()) {
-			mongo.close();
-			mongo = null;
-			db = null;
-		}
-	}
-
-	private class IdleTimerThread extends Thread
-	{
-		@Override
-		public void run()
-		{
-			try {
-				Thread.sleep(MAX_IDLE_MILLIS);
-				close();
-			}
-			catch (InterruptedException e) {
-			}
-		}
+		return conn.toString();
 	}
 }
