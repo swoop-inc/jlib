@@ -22,6 +22,11 @@ public class ConnectionMonitor<H>
 		this.connection = connection;
 	}
 
+	/**
+	 * The maximum time a connection managed by this monitor is allowed to remain idle, before it
+	 * is automatically closed.  If this value is non-positive, the connection is closed immediately
+	 * when not in use.
+	 */
 	public int getMaxIdleMillis()
 	{
 		return maxIdleMillis;
@@ -55,7 +60,9 @@ public class ConnectionMonitor<H>
 		case 0:
 			throw new IllegalStateException("useCount");
 		case 1:
+			--useCount;
 			startIdleTimeout();
+			break;
 		default:
 			--useCount;
 		}
@@ -69,11 +76,16 @@ public class ConnectionMonitor<H>
 
 	private void startIdleTimeout()
 	{
-		if (idleTimer != null) {
-			throw new IllegalStateException("idleTimer");
+		if (maxIdleMillis > 0) {
+			if (idleTimer != null) {
+				throw new IllegalStateException("idleTimer");
+			}
+			idleTimer = new Timer();
+			idleTimer.schedule(new CloseTask(), maxIdleMillis);
 		}
-		idleTimer = new Timer();
-		idleTimer.schedule(new CloseTask(), maxIdleMillis);
+		else {
+			closeIfSafe();
+		}
 	}
 
 	private void cancelIdleTimeout()

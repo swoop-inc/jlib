@@ -44,7 +44,8 @@ public class DefaultMongoConnector
 
 	/**
 	 * The maximum time a connection managed by this connector is allowed to remain idle, before it
-	 * is automatically closed.
+	 * is automatically closed.  If this value is non-positive, the connection is closed immediately
+	 * when not in use.
 	 */
 	public int getMaxIdleMillis()
 	{
@@ -59,6 +60,7 @@ public class DefaultMongoConnector
 	/**
 	 * @inheritDoc
 	 */
+	@Override
 	public <T> T executeDbCommand(MongoDbCommand<T> command)
 		throws IOException
 	{
@@ -80,6 +82,7 @@ public class DefaultMongoConnector
 	/**
 	 * @inheritDoc
 	 */
+	@Override
 	public <T> T executeCollectionCommand(final String collectionName, final MongoCollectionCommand<T> command)
 		throws IOException
 	{
