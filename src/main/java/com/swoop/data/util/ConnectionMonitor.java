@@ -80,7 +80,7 @@ public class ConnectionMonitor<H>
 			if (idleTimer != null) {
 				throw new IllegalStateException("idleTimer");
 			}
-			idleTimer = new Timer();
+			idleTimer = new Timer(true);
 			idleTimer.schedule(new CloseTask(), maxIdleMillis);
 		}
 		else {
