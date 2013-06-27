@@ -37,10 +37,7 @@ public class MongoCollectionClient
 		this.collectionName = collectionName;
 	}
 
-	/**
-	 * MongoCollectionClient is meant to be extended.
-	 */
-	protected <T> T executeCommand(MongoCollectionCommand<T> command)
+	public <T> T executeCommand(MongoCollectionCommand<T> command)
 		throws java.io.IOException
 	{
 		return executeCollectionCommand(collectionName, command);

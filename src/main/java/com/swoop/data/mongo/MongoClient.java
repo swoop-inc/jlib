@@ -29,18 +29,12 @@ public class MongoClient
 		this.connector = connector;
 	}
 
-	/**
-	 * MongoClient is meant to be extended.
-	 */
 	protected <T> T executeDbCommand(MongoDbCommand<T> command)
 		throws java.io.IOException
 	{
 		return connector.executeDbCommand(command);
 	}
 
-	/**
-	 * MongoClient is meant to be extended.
-	 */
 	protected <T> T executeCollectionCommand(String collectionName, MongoCollectionCommand<T> command)
 		throws java.io.IOException
 	{
