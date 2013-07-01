@@ -1,10 +1,8 @@
 package com.swoop.data.redis;
 
+import redis.clients.jedis.exceptions.JedisException;
 import java.io.IOException;
 import java.util.List;
-
-import redis.clients.jedis.BinaryJedisCommands;
-import redis.clients.jedis.exceptions.JedisException;
 
 /**
  * Provide template method for a Redis HMGET command.
@@ -13,7 +11,7 @@ abstract public class HashMultiGetRedisCommand<T>
 	implements RedisCommand<T>
 {
 	@Override
-	public T execute(BinaryJedisCommands jedis)
+	public T execute(SwoopBinaryJedisCommands jedis)
 		throws JedisException, IOException
 	{
 		return postprocess(jedis.hmget(getBinaryKey(), getBinaryFields()));	

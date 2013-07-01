@@ -3,10 +3,8 @@ package com.swoop.data.redis;
 import com.swoop.data.util.Connection;
 import com.swoop.data.util.ConnectionMonitor;
 
-import java.io.IOException;
-
-import redis.clients.jedis.BinaryJedisCommands;
 import redis.clients.jedis.exceptions.JedisException;
+import java.io.IOException;
 
 /**
  * Implementation of RedisConnector based on the Jedis driver.
@@ -14,7 +12,7 @@ import redis.clients.jedis.exceptions.JedisException;
 public class DefaultRedisConnector
 	implements RedisConnector
 {
-	private ConnectionMonitor<BinaryJedisCommands> conn;
+	private ConnectionMonitor<SwoopBinaryJedisCommands> conn;
 
 	public DefaultRedisConnector()
 	{
@@ -29,9 +27,9 @@ public class DefaultRedisConnector
 	/**
 	 * Allows for mocking of Redis connection.
 	 */
-	public DefaultRedisConnector(Connection<BinaryJedisCommands> connection)
+	public DefaultRedisConnector(Connection<SwoopBinaryJedisCommands> connection)
 	{
-		this.conn = new ConnectionMonitor<BinaryJedisCommands>(connection);
+		this.conn = new ConnectionMonitor<SwoopBinaryJedisCommands>(connection);
 	}
 
 	/**
@@ -42,7 +40,7 @@ public class DefaultRedisConnector
 		throws IOException
 	{
 		try {
-			BinaryJedisCommands jedis = conn.use();
+			SwoopBinaryJedisCommands jedis = conn.use();
 			try {
 				return command.execute(jedis);
 			}

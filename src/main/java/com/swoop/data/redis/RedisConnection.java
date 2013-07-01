@@ -2,21 +2,18 @@ package com.swoop.data.redis;
 
 import com.swoop.data.util.Connection;
 
-import java.io.IOException;
-
-// TODO: try using the redis-protocol driver for better efficiency
-import redis.clients.jedis.BinaryJedis;
-import redis.clients.jedis.BinaryJedisCommands;
 import redis.clients.jedis.exceptions.JedisException;
+import java.io.IOException;
+// TODO: try using the redis-protocol driver for better efficiency
 
 /**
  * Implementation of RedisConnector based on the Jedis driver.
  */
 public class RedisConnection
-	implements Connection<BinaryJedisCommands>
+	implements Connection<SwoopBinaryJedisCommands>
 {
 	private RedisConnectorConfig config;
-	private BinaryJedis jedis;
+	private SwoopBinaryJedis jedis;
 
 	public RedisConnection()
 	{
@@ -29,12 +26,12 @@ public class RedisConnection
 	}
 
 	@Override
-	public BinaryJedisCommands open()
+	public SwoopBinaryJedisCommands open()
 		throws IOException
 	{
 		try {
 			if (!isOpen()) {
-				jedis = new BinaryJedis(config.getHost(), config.getPort(), config.getTimeoutMillis());
+				jedis = new SwoopBinaryJedis(config.getHost(), config.getPort(), config.getTimeoutMillis());
 				// select() implicitly connects.  Set authentication info first.
 				if (config.getPassword() != null) {
 					jedis.auth(config.getPassword());
