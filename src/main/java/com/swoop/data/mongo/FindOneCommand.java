@@ -1,10 +1,10 @@
 package com.swoop.data.mongo;
 
+import java.io.IOException;
+
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
-
-import java.io.IOException;
 
 /**
  * Template method for MongoDB findOne command.
@@ -16,19 +16,19 @@ abstract public class FindOneCommand<T>
 	public T execute(DBCollection dbCollection)
 		throws MongoException, IOException
 	{
-		DBObject filter = getFilter();
-		return postprocess(filter == null
+		final T filter = getFilter();
+		return postprocess((T) (filter == null
 			? dbCollection.findOne(getQuery())
-			: dbCollection.findOne(getQuery(), filter));
+			: dbCollection.findOne(getQuery(), (DBObject) filter)));
 	}
 
-	abstract protected DBObject getQuery();
+	abstract protected T getQuery();
 
-	protected DBObject getFilter()
+	protected T getFilter()
 	{
 		return null;
 	}
 
-	abstract protected T postprocess(DBObject dbo)
+	abstract protected T postprocess(T dbo)
 		throws IOException;
 }
