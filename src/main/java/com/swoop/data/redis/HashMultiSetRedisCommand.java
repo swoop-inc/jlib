@@ -1,11 +1,8 @@
 package com.swoop.data.redis;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
-import redis.clients.jedis.BinaryJedisCommands;
 import redis.clients.jedis.exceptions.JedisException;
+import java.io.IOException;
+import java.util.Map;
 
 /**
  * Provide template method for a Redis HMSET command.
@@ -14,7 +11,7 @@ abstract public class HashMultiSetRedisCommand
 	implements RedisCommand<String>
 {
 	@Override
-	public String execute(BinaryJedisCommands jedis)
+	public String execute(SwoopBinaryJedisCommands jedis)
 		throws JedisException, IOException
 	{
 		return jedis.hmset(getBinaryKey(), getBinaryFieldValueMap());

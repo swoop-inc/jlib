@@ -1,12 +1,10 @@
 package com.swoop.data.redis;
 
-import java.io.IOException;
-
-import redis.clients.jedis.BinaryJedisCommands;
 import redis.clients.jedis.exceptions.JedisException;
+import java.io.IOException;
 
 public interface RedisCommand<T>
 {
-	public T execute(BinaryJedisCommands jedis)
+	public T execute(SwoopBinaryJedisCommands jedis)
 		throws JedisException, IOException;
 }
