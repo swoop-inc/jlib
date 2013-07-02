@@ -11,7 +11,7 @@ abstract public class MultiSetRedisCommand implements RedisCommand<String>
 	@Override
 	public String execute(SwoopBinaryJedisCommands jedis) throws JedisException, IOException
 	{
-		return jedis.mset(getBinaryKeyAndValues());
+		return jedis.mset(getBinaryKeysAndValues());
 	}
 	
 	/**
@@ -20,5 +20,5 @@ abstract public class MultiSetRedisCommand implements RedisCommand<String>
 	 * @return
 	 * @throws IOException
 	 */
-	abstract protected byte[][] getBinaryKeyAndValues() throws IOException;
+	abstract protected byte[][] getBinaryKeysAndValues() throws IOException;
 }
