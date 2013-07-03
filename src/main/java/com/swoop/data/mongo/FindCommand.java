@@ -3,13 +3,14 @@ package com.swoop.data.mongo;
 import java.io.IOException;
 
 import com.mongodb.DBCollection;
+import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 
 /**
- * Template method for MongoDB findOne command.
+ * Template method for MongoDB find command.
  */
-abstract public class FindOneCommand<T>
+abstract public class FindCommand<T>
 	extends BaseFindCommand<T>
 	implements MongoCollectionCommand<T>
 {
@@ -20,10 +21,7 @@ abstract public class FindOneCommand<T>
 	public T execute(DBCollection dbCollection)
 		throws MongoException, IOException
 	{
-		final DBObject filter = getFilter();
-		return postprocess(filter == null
-			? dbCollection.findOne(getQuery())
-			: dbCollection.findOne(getQuery(), filter));
+		return postprocess(dbCollection.find(getQuery(), getFilter()));
 	}
 
 	/**
@@ -32,9 +30,9 @@ abstract public class FindOneCommand<T>
 	 *
 	 * Subclasses must implement this method.
 	 *
-	 * @param dbo  the result of the findOne() operation - may be null
+	 * @param dbCursor  the result of the find() operation - a non-null DB cursor
 	 * @return the postprocessed result
 	 */
-	abstract protected T postprocess(DBObject dbo)
+	abstract protected T postprocess(DBCursor dbCursor)
 		throws IOException;
 }
