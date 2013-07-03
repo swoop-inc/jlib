@@ -12,23 +12,45 @@ import com.mongodb.MongoException;
 abstract public class FindOneCommand<T>
 	implements MongoCollectionCommand<T>
 {
+	/**
+	 * @inheritDoc
+	 */
 	@Override
 	public T execute(DBCollection dbCollection)
 		throws MongoException, IOException
 	{
-		final T filter = getFilter();
-		return postprocess((T) (filter == null
+		final DBObject filter = getFilter();
+		return postprocess(filter == null
 			? dbCollection.findOne(getQuery())
-			: dbCollection.findOne(getQuery(), (DBObject) filter)));
+			: dbCollection.findOne(getQuery(), filter));
 	}
 
-	abstract protected T getQuery();
+	/**
+	 * Get the query object to pass to the MongoDB driver.
+	 *
+	 * Subclasses must implement this method.
+	 */
+	abstract protected DBObject getQuery();
 
-	protected T getFilter()
+	/**
+	 * Get the filter object to pass to the MongoDB driver.
+	 *
+	 * Default implementation returns null (empty filter)
+	 */
+	protected DBObject getFilter()
 	{
 		return null;
 	}
 
-	abstract protected T postprocess(T dbo)
+	/**
+	 * Postprocess the query results to produce whatever result 
+	 * type the subclass requires.
+	 *
+	 * Subclasses must implement this method.
+	 *
+	 * @param dbo  the result of the findOne() operation - may be null
+	 * @return the postprocessed result
+	 */
+	abstract protected T postprocess(DBObject dbo)
 		throws IOException;
 }
