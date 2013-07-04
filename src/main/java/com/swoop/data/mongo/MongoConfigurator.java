@@ -7,6 +7,12 @@ package com.swoop.data.mongo;
 public interface MongoConfigurator
 {
 	/**
+	 * Create a connector based on this configurator's default configuration.
+	 */
+	public MongoConnector createConnector()
+		throws java.io.IOException;
+
+	/**
 	 * Resolve the given key to a configuration, and create the configured connector.
 	 * @param configurationKey
 	 *     the key of the desired configuration

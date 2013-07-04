@@ -41,6 +41,19 @@ public class DefaultMongoConfigurator
 	 * @inheritDoc
 	 */
 	@Override
+	public synchronized MongoConnector createConnector()
+		throws java.io.IOException
+	{
+		if (defaultConnector == null) {
+			defaultConnector = configureConnector(new DefaultMongoConnector());
+		}
+		return defaultConnector;
+	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
 	public synchronized MongoConnector createConnector(String configurationKey)
 		throws java.io.IOException
 	{
@@ -54,10 +67,7 @@ public class DefaultMongoConfigurator
 			return conn;
 		}
 		else { 
-			if (defaultConnector == null) {
-				defaultConnector = configureConnector(new DefaultMongoConnector());
-			}
-			return defaultConnector;
+			return createConnector();
 		}
 	}
 
