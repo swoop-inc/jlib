@@ -66,7 +66,7 @@ public class ConnectionMonitorTest
 	{
 		Connection connection = new DummyConnection();
 		ConnectionMonitor<Handle> monitor = new ConnectionMonitor<Handle>(connection);
-		monitor.setMaxIdleMillis(5);
+		monitor.setMaxIdleMillis(1000);
 		for (int i = 0; i < 100; ++i) {
 			monitor.use();
 			assertTrue(connection.isOpen());
