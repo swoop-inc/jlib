@@ -1,6 +1,5 @@
 package com.swoop.data.mongo;
 
-import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
@@ -11,25 +10,15 @@ import java.io.IOException;
 /**
  * Template method for MongoDB update command.
  */
-abstract public class UpdateCommand
+abstract public class InsertCommand
 	implements MongoCollectionCommand<WriteResult>
 {
 	@Override
 	public WriteResult execute(DBCollection dbCollection)
 		throws MongoException, IOException
 	{
-		return dbCollection.update(getQuery(), getObject(), isUpsert(), false);
-	}
-
-	protected DBObject getQuery()
-	{
-		return new BasicDBObject();
+		return dbCollection.insert(getObject());
 	}
 
 	abstract protected DBObject getObject();
-
-	protected boolean isUpsert()
-	{
-		return false;
-	}
 }
