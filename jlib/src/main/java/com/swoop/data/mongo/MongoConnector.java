@@ -17,7 +17,7 @@ public interface MongoConnector
 		throws IOException;
 
 	/**
-	 * Execute a command on a specific collection this connector's MongoDB database.
+	 * Execute a command on a specific collection in this connector's MongoDB database.
 	 * @param collectionName
 	 *    the name of the collection to pass to the command
 	 * @param command
