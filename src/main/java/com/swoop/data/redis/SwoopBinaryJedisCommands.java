@@ -1,6 +1,7 @@
 package com.swoop.data.redis;
 
 import redis.clients.jedis.BinaryJedisCommands;
+import redis.clients.jedis.Pipeline;
 import java.util.List;
 
 public interface SwoopBinaryJedisCommands extends BinaryJedisCommands
@@ -38,4 +39,10 @@ public interface SwoopBinaryJedisCommands extends BinaryJedisCommands
      * @return Status code reply Basically +OK as MSET can't fail
      */
     String mset(final byte[]... keysvalues);
+    
+    /**
+     * Starts a pipeline, which is a very efficient way to send lots of command
+     * and read all the responses when you finish sending them.
+     */
+    Pipeline pipelined();
 }
