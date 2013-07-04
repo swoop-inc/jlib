@@ -26,6 +26,9 @@ public class FindOneByFieldCommand
 		return new BasicDBObject(field, value);
 	}
 
+	/**
+	 * Return the raw MongoDB result object - do no postprocessing.
+	 */
 	@Override
 	protected DBObject postprocess(DBObject dbo) throws IOException
 	{
