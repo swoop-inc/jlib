@@ -25,7 +25,7 @@ class MongoConnection
 	 */
 	MongoConnection()
 	{
-		this.uri = new MongoURI("mongodb://localhost");
+		this.uri = new MongoURI("mongodb://localhost/test");
 	}
 
 	/**
