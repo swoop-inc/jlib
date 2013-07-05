@@ -7,6 +7,7 @@ import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
 
 import java.io.IOException;
+import java.util.Map;
 
 /**
  * A MongoDB insert command.
@@ -17,20 +18,28 @@ public class InsertCommand
 	private DBObject object = new BasicDBObject();
 
 	/**
-	 * Builder method.  Set the MongoDB ID of the object to insert.
+	 * Builder method.  Set the ID of the new object.
 	 */
-	public InsertCommand withObjectId(Object idValue)
+	public InsertCommand objectId(Object idValue)
 	{
-		object.put(Constants.ID, idValue);
+		return objectField(Constants.ID, idValue);
+	}
+
+	/**
+	 * Builder method.  Add a (key,value) pair to the object.
+	 */
+	public InsertCommand objectField(String key, Object value)
+	{
+		object.put(key, value);
 		return this;
 	}
 
 	/**
-	 * Builder method.  Add a (key,value) entry to the object to insert.
+	 * Builder method.  Extend the new object.
 	 */
-	public InsertCommand withObjectField(String key, Object value)
+	public InsertCommand object(Map<String,Object> query)
 	{
-		object.put(key, value);
+		this.object.putAll(object);
 		return this;
 	}
 
