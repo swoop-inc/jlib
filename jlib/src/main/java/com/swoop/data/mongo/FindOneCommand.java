@@ -8,6 +8,7 @@ import com.mongodb.MongoException;
 
 /**
  * Template method for MongoDB findOne command.
+ * @deprecated
  */
 abstract public class FindOneCommand<T>
 	extends BaseFindCommand<T>
@@ -24,6 +25,23 @@ abstract public class FindOneCommand<T>
 		return postprocess(filter == null
 			? dbCollection.findOne(getQuery())
 			: dbCollection.findOne(getQuery(), filter));
+	}
+
+	/**
+	 * Get the query object to pass to the MongoDB driver.
+	 *
+	 * Subclasses must implement this method.
+	 */
+	abstract protected DBObject getQuery();
+
+	/**
+	 * Get the filter object to pass to the MongoDB driver.
+	 *
+	 * Default implementation returns null (empty filter)
+	 */
+	protected DBObject getFilter()
+	{
+		return null;
 	}
 
 	/**

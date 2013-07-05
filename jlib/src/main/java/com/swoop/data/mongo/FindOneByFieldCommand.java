@@ -7,6 +7,7 @@ import com.mongodb.DBObject;
 
 /**
  * A specialized MongoDB findOne command that queries by (fieldName, fieldValue) tuple.
+ * @deprecated
  */
 public class FindOneByFieldCommand
 	extends FindOneCommand<DBObject>

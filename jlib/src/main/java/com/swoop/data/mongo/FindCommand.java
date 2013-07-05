@@ -1,38 +1,22 @@
 package com.swoop.data.mongo;
 
-import java.io.IOException;
-
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
+import java.util.List;
 import com.mongodb.DBObject;
-import com.mongodb.MongoException;
 
 /**
- * Template method for MongoDB find command.
+ * Seed of a MongoDB find or findOne command.
  */
-abstract public class FindCommand<T>
-	extends BaseFindCommand<T>
-	implements MongoCollectionCommand<T>
+public class FindCommand<T>
+	extends FindCommandTemplate<DBObject>
+	implements MongoCollectionCommand<List<DBObject>>
 {
-	/**
-	 * @inheritDoc
-	 */
-	@Override
-	public T execute(DBCollection dbCollection)
-		throws MongoException, IOException
+	public FindCommand()
 	{
-		return postprocess(dbCollection.find(getQuery(), getFilter()));
+		super(new Postprocessor<DBObject>() {
+			@Override
+			public DBObject postprocess(DBObject dbo) {
+				return dbo;
+			}
+		});
 	}
-
-	/**
-	 * Postprocess the query results to produce whatever result 
-	 * type the subclass requires.
-	 *
-	 * Subclasses must implement this method.
-	 *
-	 * @param dbCursor  the result of the find() operation - a non-null DB cursor
-	 * @return the postprocessed result
-	 */
-	abstract protected T postprocess(DBCursor dbCursor)
-		throws IOException;
 }
