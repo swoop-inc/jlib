@@ -16,6 +16,7 @@ public class FindOneCommand<T>
 {
 	private DBObject query;
 	private DBObject filter;
+	private DBObject projection;
 	private Postprocessor<T> postprocessor;
 
 	public FindOneCommand(Postprocessor<T> postprocessor)
@@ -25,13 +26,13 @@ public class FindOneCommand<T>
 
 	protected FindOneCommand(FindOneCommand<?> source, Postprocessor<T> postprocessor)
 	{
-		this(source.query, source.filter, postprocessor);
+		this(source.query, source.projection, postprocessor);
 	}
 
-	private FindOneCommand(DBObject query, DBObject filter, Postprocessor<T> postprocessor)
+	private FindOneCommand(DBObject query, DBObject projection, Postprocessor<T> postprocessor)
 	{
 		this.query = query;
-		this.filter = filter;
+		this.projection = projection;
 		this.postprocessor = postprocessor;
 	}
 
@@ -62,6 +63,26 @@ public class FindOneCommand<T>
 	}
 
 	/**
+	 * Builder method.  Include the given field in the results.
+	 */
+	public FindOneCommand<T> include(String fieldName)
+	{
+		initProjection();
+		projection.put(fieldName, 1);
+		return this;
+	}
+
+	/**
+	 * Builder method.  Exclude the given field in the results.
+	 */
+	public FindOneCommand<T> exclude(String fieldName)
+	{
+		initProjection();
+		projection.put(fieldName, 0);
+		return this;
+	}
+
+	/**
 	 * Builder method.  Supply a post-processor.
 	 */
 	public <TT> FindOneCommand<TT> usePostprocessor(Postprocessor<TT> postprocessor)
@@ -76,6 +97,13 @@ public class FindOneCommand<T>
 	public T execute(DBCollection dbCollection)
 		throws MongoException, IOException
 	{
-		return postprocessor.postprocess(dbCollection.findOne(query, filter));
+		return postprocessor.postprocess(dbCollection.findOne(query, projection));
+	}
+
+	private void initProjection()
+	{
+		if (projection == null) {
+			projection = new BasicDBObject();
+		}
 	}
 }

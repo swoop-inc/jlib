@@ -19,7 +19,7 @@ public class FindListCommand<T>
 	implements MongoCollectionCommand<List<T>>
 {
 	private DBObject query;
-	private DBObject filter;
+	private DBObject projection;
 	private Postprocessor<T> postprocessor;
 
 	public FindListCommand(Postprocessor<T> postprocessor)
@@ -29,13 +29,13 @@ public class FindListCommand<T>
 
 	protected FindListCommand(FindListCommand<?> source, Postprocessor<T> postprocessor)
 	{
-		this(source.query, source.filter, postprocessor);
+		this(source.query, source.projection, postprocessor);
 	}
 
-	private FindListCommand(DBObject query, DBObject filter, Postprocessor<T> postprocessor)
+	private FindListCommand(DBObject query, DBObject projection, Postprocessor<T> postprocessor)
 	{
 		this.query = query;
-		this.filter = filter;
+		this.projection = projection;
 		this.postprocessor = postprocessor;
 	}
 
@@ -66,6 +66,26 @@ public class FindListCommand<T>
 	}
 
 	/**
+	 * Builder method.  Include the given field in the results.
+	 */
+	public FindListCommand<T> include(String fieldName)
+	{
+		initProjection();
+		projection.put(fieldName, 1);
+		return this;
+	}
+
+	/**
+	 * Builder method.  Exclude the given field in the results.
+	 */
+	public FindListCommand<T> exclude(String fieldName)
+	{
+		initProjection();
+		projection.put(fieldName, 0);
+		return this;
+	}
+
+	/**
 	 * Builder method.  Supply a post-processor.
 	 */
 	public <TT> FindListCommand<TT> usePostprocessor(Postprocessor<TT> postprocessor)
@@ -81,12 +101,19 @@ public class FindListCommand<T>
 		throws MongoException, IOException
 	{
 		List<T> results = new ArrayList<T>();
-		for (DBCursor cursor = dbCollection.find(query, filter); cursor.hasNext(); ) {
+		for (DBCursor cursor = dbCollection.find(query, projection); cursor.hasNext(); ) {
 			T ppObj = postprocessor.postprocess(cursor.next());
 			if (ppObj != null) {
 				results.add(ppObj);
 			}
 		}
 		return Collections.unmodifiableList(results);
+	}
+
+	private void initProjection()
+	{
+		if (projection == null) {
+			projection = new BasicDBObject();
+		}
 	}
 }

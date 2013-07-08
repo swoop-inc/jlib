@@ -106,4 +106,61 @@ public class FindOneITCase
 			assertNotNull(connector.executeCommand(new DefaultFindOneCommand().query(new Hash().addEntry("id", "abc").addEntry("a", 10))));
 		}
 	}
+
+	@Test
+	public void testIncludeField() throws Exception
+	{
+		if (connector != null) {
+			DBObject result = connector.executeCommand(new DefaultFindOneCommand()
+				.queryId("abc")
+				.include("a"));
+			assertNotNull(result);
+			assertEquals(new Hash("_id", "abc").addEntry("a", 1), result);
+		}
+	}
+
+	@Test
+	public void testExcludeField() throws Exception
+	{
+		if (connector != null) {
+			DBObject result = connector.executeCommand(new DefaultFindOneCommand()
+				.queryId("abc")
+				.exclude("b")
+				.exclude("c"));
+			assertNotNull(result);
+			assertEquals(new Hash("_id", "abc").addEntry("a", 1), result);
+		}
+	}
+
+	@Test
+	public void testUsePostprocessorPositive() throws Exception
+	{
+		if (connector != null) {
+			Integer result = connector.executeCommand(new DefaultFindOneCommand()
+				.usePostprocessor(new Postprocessor<Integer>() {
+					@Override
+					public Integer postprocess(DBObject dbo)
+					{
+						return dbo.containsKey("c") ? (Integer) dbo.get("c") : null;
+					}
+				}));
+			assertNotNull(result);
+		}
+	}
+
+	@Test
+	public void testUsePostprocessorNegative() throws Exception
+	{
+		if (connector != null) {
+			Integer result = connector.executeCommand(new DefaultFindOneCommand()
+				.usePostprocessor(new Postprocessor<Integer>() {
+					@Override
+					public Integer postprocess(DBObject dbo)
+					{
+						return dbo.containsKey("d") ? (Integer) dbo.get("d") : null;
+					}
+				}));
+			assertNull(result);
+		}
+	}
 }
