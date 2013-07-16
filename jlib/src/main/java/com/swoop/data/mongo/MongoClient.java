@@ -29,6 +29,11 @@ public class MongoClient
 		this.connector = connector;
 	}
 
+	public MongoConnector getConnector()
+	{
+		return connector;
+	}
+
 	protected <T> T executeDbCommand(MongoDbCommand<T> command)
 		throws java.io.IOException
 	{
