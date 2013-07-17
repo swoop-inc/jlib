@@ -12,7 +12,9 @@
 
 	<modules>
 		<module>jlib</module>
+		<!--
 		<module>mongodb-integration</module>
+		-->
 	</modules>
 
 	<properties>
