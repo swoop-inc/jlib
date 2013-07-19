@@ -1,4 +1,4 @@
-package com.swoop.util;
+package com.swoop.util.random;
 
 /**
  * RandomNumberGenerator is an interface for a general purpose random

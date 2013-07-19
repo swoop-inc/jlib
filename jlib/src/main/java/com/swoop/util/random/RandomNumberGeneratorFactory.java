@@ -1,4 +1,4 @@
-package com.swoop.util;
+package com.swoop.util.random;
 
 /**
  * Factory interface for {@link com.swoop.util.RandomNumberGenerator}.

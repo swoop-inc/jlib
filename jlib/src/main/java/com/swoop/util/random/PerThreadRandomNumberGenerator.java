@@ -1,4 +1,4 @@
-package com.swoop.util;
+package com.swoop.util.random;
 
 /**
  * A random number generator that internally assigns a separate RNG instance for use 
