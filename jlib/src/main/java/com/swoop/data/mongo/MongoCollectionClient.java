@@ -4,9 +4,10 @@ package com.swoop.data.mongo;
  * A MongoCollectionClient works with a specific MongoDB collection.
  */
 public class MongoCollectionClient
-	extends MongoClient
+ extends MongoClient
 {
-	private String collectionName;
+	private String	collectionName;
+	private String	keyField	= "_id";
 
 	/**
 	 * Constructor.
@@ -41,6 +42,25 @@ public class MongoCollectionClient
 		throws java.io.IOException
 	{
 		return executeCollectionCommand(collectionName, command);
+	}
+
+	/**
+	 * 
+	 * @param collectionName
+	 */
+	public void setCollectionName(String collectionName)
+	{
+		this.collectionName = collectionName;
+	}
+
+	/**
+	 * 
+	 * @param keyField
+	 *            default is "_id"
+	 */
+	public void setKeyField(String keyField)
+	{
+		this.keyField = keyField;
 	}
 
 	/**

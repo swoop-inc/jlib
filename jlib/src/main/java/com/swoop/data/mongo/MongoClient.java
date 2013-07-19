@@ -5,7 +5,7 @@ package com.swoop.data.mongo;
  */
 public class MongoClient
 {
-	private MongoConnector connector;
+	private MongoConnector	connector;
 
 	/**
 	 * Constructor.
@@ -32,6 +32,15 @@ public class MongoClient
 	public MongoConnector getConnector()
 	{
 		return connector;
+	}
+
+	/**
+	 * 
+	 * @param mongoUri
+	 */
+	public void setMongoUri(String mongoUri)
+	{
+		this.connector = new DefaultMongoConnector(mongoUri);
 	}
 
 	protected <T> T executeDbCommand(MongoDbCommand<T> command)
