@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# Start mongod if it is not already running.  Use a local temporary directory for data and logs.
+#
+
+cd $( dirname "$0" )/..
+
+PORT=27018
+
+# Check for mongo installation
+if ! which mongo > /dev/null ; then
+    echo "'mongo' is not in the execution path. Is mongodb installed?"
+    exit 1
+fi
+if ! which mongod > /dev/null ; then
+    echo "'mongod' is not in the execution path. Is mongodb installed?"
+    exit 1
+fi
+
+# Check for mongo server already running
+mongo localhost:$PORT/test << EOF > /dev/null 2>&1
+exit
+EOF
+if [ $? = 0 ] ; then
+    echo "'mongod' is already running."
+    exit 0
+fi
+
+if [ -f mongo/mongod.lock ] ; then
+    PID=`cat data/mongod.lock`
+    if [ ! -z "$PID" ] && ps $PID > /dev/null ; then
+        echo "'mongod' is running in process $PID, but not listening on port $PORT"
+        echo "Terminate it and try again." 
+        exit 1
+    fi
+fi
+
+# Initialize directory structure.
+mkdir -p mongo/data
+/bin/rm -f mongo/data/mongod.lock
+
+# Start up server in the background.
+mongod --port $PORT --fork --dbpath=mongo/data --logpath=mongo/mongodb.log > /dev/null
+
+# Wait a few seconds for Mongod to start up.
+i=6
+while [ ! -f mongo/data/mongod.lock ] && [ $i -gt 0 ] ; do
+    sleep 1
+    i=$(( $i - 1 ))
+done
+
+if [ -s mongo/data/mongod.lock ] ; then
+    echo "'mongod' started."
+else
+    echo "Unable to start 'mongod'."
+    exit 1
+fi

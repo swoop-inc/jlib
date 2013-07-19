@@ -3,7 +3,6 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
 	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
-
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.swoop</groupId>
 	<artifactId>mongodb-integration</artifactId>
@@ -20,32 +19,33 @@
 		<plugins>
 			<!-- Failsafe integration tests -->
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-failsafe-plugin</artifactId>
-			</plugin>
-			<!-- Embedded MongoDB server! -->
-			<plugin>
-				<groupId>com.github.joelittlejohn.embedmongo</groupId>
-				<artifactId>embedmongo-maven-plugin</artifactId>
-				<version>0.1.9</version>
 				<executions>
 					<execution>
-						<id>start</id>
+						<id>integration-tests</id>
+						<phase>integration-test</phase>
 						<goals>
-							<goal>start</goal>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Start up mongod before running tests -->
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>exec-maven-plugin</artifactId>
+				<version>1.2.1</version>
+				<executions>
+					<execution>
+						<id>start-mongod</id>
+						<phase>pre-integration-test</phase>
+						<goals>
+							<goal>exec</goal>
 						</goals>
 						<configuration>
-							<port>27018</port>
-							<databaseDirectory>${project.build.directory}/testdb</databaseDirectory>
-							<logging>file</logging>
-							<logFile>${project.build.directory}/myfile.log</logFile>
+							<executable>bin/mongo_start</executable>
 						</configuration>
-					</execution>
-					<execution>
-						<id>stop</id>
-						<goals>
-							<goal>stop</goal>
-						</goals>
 					</execution>
 				</executions>
 			</plugin>
