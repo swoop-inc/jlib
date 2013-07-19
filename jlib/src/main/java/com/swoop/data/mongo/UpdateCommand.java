@@ -51,6 +51,7 @@ public class UpdateCommand
 	/**
 	 * Builder method.  Set a specific field of the updated object.
 	 */
+	@SuppressWarnings("deprecation")
 	public UpdateCommand setObjectField(String key, Object value)
 	{
 		if (!object.containsKey("$set")) {
@@ -63,6 +64,7 @@ public class UpdateCommand
 	/**
 	 * Builder method.  Set a specific field of the updated object.
 	 */
+	@SuppressWarnings("deprecation")
 	public UpdateCommand unsetObjectField(String key)
 	{
 		if (!object.containsKey("$unset")) {

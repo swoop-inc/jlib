@@ -3,4 +3,5 @@ target/
 *.swp
 .classpath
 .project
-
+jlib/.settings/
+mongodb-integration/.settings/

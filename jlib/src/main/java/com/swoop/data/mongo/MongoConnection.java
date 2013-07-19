@@ -2,7 +2,6 @@ package com.swoop.data.mongo;
 
 import com.mongodb.DB;
 import com.mongodb.Mongo;
-import com.mongodb.MongoException;
 import com.mongodb.MongoURI;
 import com.mongodb.ReadPreference;
 

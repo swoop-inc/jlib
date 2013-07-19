@@ -15,6 +15,7 @@ public class FindOneCommand<T>
 	implements MongoCollectionCommand<T>
 {
 	private DBObject query;
+	@SuppressWarnings("unused")
 	private DBObject filter;
 	private DBObject projection;
 	private Postprocessor<T> postprocessor;

@@ -8,8 +8,13 @@ public class InitializationException
     extends Exception
 {
     /**
-     * Default constructor.
-     */
+	 * 
+	 */
+	private static final long	serialVersionUID	= -1416883271804079440L;
+
+	/**
+	 * Default constructor.
+	 */
     public InitializationException()
     {
     }

@@ -1,8 +1,6 @@
 package com.swoop.data.mongo;
 
 import com.mongodb.*;
-import java.io.IOException;
-import java.util.*;
 import net.ech.util.Hash;
 import org.junit.*;
 import static org.junit.Assert.*;
@@ -138,6 +136,7 @@ public class FindOneITCase
 		if (connector != null) {
 			Integer result = connector.executeCommand(new DefaultFindOneCommand()
 				.usePostprocessor(new Postprocessor<Integer>() {
+					@SuppressWarnings("deprecation")
 					@Override
 					public Integer postprocess(DBObject dbo)
 					{
@@ -154,6 +153,7 @@ public class FindOneITCase
 		if (connector != null) {
 			Integer result = connector.executeCommand(new DefaultFindOneCommand()
 				.usePostprocessor(new Postprocessor<Integer>() {
+					@SuppressWarnings("deprecation")
 					@Override
 					public Integer postprocess(DBObject dbo)
 					{

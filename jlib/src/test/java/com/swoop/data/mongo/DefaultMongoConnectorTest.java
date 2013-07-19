@@ -2,7 +2,6 @@ package com.swoop.data.mongo;
 
 import com.mongodb.DB;
 import com.swoop.data.util.Connection;
-import java.util.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 

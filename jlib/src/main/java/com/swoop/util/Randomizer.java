@@ -73,7 +73,7 @@ public class Randomizer
 				while (candidates.hasNext()) {
 					ChoiceNode<V> candidate = candidates.next();
 					if ((rng.nextDouble() * workingTotalWeight) >= prevTotalWeight) {
-						candidates.set(new ChoiceNode(choices.getCurrentValue(), weight));
+						candidates.set(new ChoiceNode<V>(choices.getCurrentValue(), weight));
 						candidates.add(candidate);
 						if (top.size() > n) {
 							top.removeLast();
@@ -85,7 +85,7 @@ public class Randomizer
 					prevTotalWeight -= candidate.weight;
 				}
 				if (!inserted && top.size() < n) {
-					top.add(new ChoiceNode(choices.getCurrentValue(), weight));
+					top.add(new ChoiceNode<V>(choices.getCurrentValue(), weight));
 				}
 			}
 		}

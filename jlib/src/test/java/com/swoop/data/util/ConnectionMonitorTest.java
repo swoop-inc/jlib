@@ -1,6 +1,5 @@
 package com.swoop.data.util;
 
-import java.util.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -9,7 +8,7 @@ public class ConnectionMonitorTest
 	@Test
 	public void testFirstUseOpensConnection() throws Exception
 	{
-		Connection connection = new DummyConnection();
+		Connection<Handle> connection = new DummyConnection();
 		ConnectionMonitor<Handle> monitor = new ConnectionMonitor<Handle>(connection);
 		monitor.use();
 		assertTrue(connection.isOpen());
@@ -51,7 +50,7 @@ public class ConnectionMonitorTest
 	@Test
 	public void testAutoClose() throws Exception
 	{
-		Connection connection = new DummyConnection();
+		Connection<Handle> connection = new DummyConnection();
 		ConnectionMonitor<Handle> monitor = new ConnectionMonitor<Handle>(connection);
 		monitor.use();
 		monitor.setMaxIdleMillis(1);
@@ -64,7 +63,7 @@ public class ConnectionMonitorTest
 	@Test
 	public void testKeepAlive() throws Exception
 	{
-		Connection connection = new DummyConnection();
+		Connection<Handle> connection = new DummyConnection();
 		ConnectionMonitor<Handle> monitor = new ConnectionMonitor<Handle>(connection);
 		monitor.setMaxIdleMillis(1000);
 		for (int i = 0; i < 100; ++i) {

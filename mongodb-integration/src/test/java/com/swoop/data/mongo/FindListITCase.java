@@ -1,7 +1,6 @@
 package com.swoop.data.mongo;
 
 import com.mongodb.*;
-import java.io.IOException;
 import java.util.*;
 import net.ech.util.Hash;
 import org.junit.*;
@@ -157,6 +156,7 @@ public class FindListITCase
 		if (connector != null) {
 			List<Integer> result = connector.executeCommand(new DefaultFindListCommand()
 				.usePostprocessor(new Postprocessor<Integer>() {
+					@SuppressWarnings("deprecation")
 					@Override
 					public Integer postprocess(DBObject dbo)
 					{

@@ -1,8 +1,6 @@
 package com.swoop.data.mongo;
 
 import com.mongodb.*;
-import java.io.IOException;
-import java.util.*;
 import net.ech.util.Hash;
 import org.junit.*;
 import static org.junit.Assert.*;

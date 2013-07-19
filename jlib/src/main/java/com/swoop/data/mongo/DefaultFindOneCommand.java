@@ -15,4 +15,16 @@ public class DefaultFindOneCommand
 	{
 		super(DEFAULT_POSTPROCESSOR);
 	}
+
+	public DefaultFindOneCommand(String documentId)
+	{
+		super(DEFAULT_POSTPROCESSOR);
+		queryId(documentId);
+	}
+
+	public DefaultFindOneCommand(String field, String value)
+	{
+		super(DEFAULT_POSTPROCESSOR);
+		queryField(field, value);
+	}
 }
