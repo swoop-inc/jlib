@@ -1,4 +1,4 @@
-package com.swoop.util;
+package com.swoop.util.random;
 
 /**
  * A data view required by {@link com.swoop.util.Randomizer#select}

@@ -1,4 +1,4 @@
-package com.swoop.util;
+package com.swoop.util.random;
 
 public class RiggedRandomNumberGenerator
 	implements RandomNumberGenerator
