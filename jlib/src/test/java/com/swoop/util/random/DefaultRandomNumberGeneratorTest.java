@@ -1,4 +1,4 @@
-package com.swoop.util;
+package com.swoop.util.random;
 
 import org.junit.*;
 import static org.junit.Assert.*;

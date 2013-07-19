@@ -1,7 +1,7 @@
 package com.swoop.example;
 
-import com.swoop.util.Randomizer;
-import com.swoop.util.WeightedChoiceIterator;
+import com.swoop.util.random.Randomizer;
+import com.swoop.util.random.WeightedChoiceIterator;
 
 import java.util.Arrays;
 import java.util.List;
