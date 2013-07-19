@@ -1,4 +1,4 @@
-package com.swoop.util;
+package com.swoop.util.random;
 
 /**
  * Default implementation of RandomNumberGenerator, based on the 

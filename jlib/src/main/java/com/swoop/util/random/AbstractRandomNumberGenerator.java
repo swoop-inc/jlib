@@ -1,4 +1,4 @@
-package com.swoop.util;
+package com.swoop.util.random;
 
 /**
  * A base class for a RNG implementation.

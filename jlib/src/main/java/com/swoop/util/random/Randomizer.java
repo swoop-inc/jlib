@@ -1,4 +1,4 @@
-package com.swoop.util;
+package com.swoop.util.random;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
