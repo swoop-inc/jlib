@@ -5,7 +5,7 @@
 
 	<groupId>com.swoop</groupId>
 	<artifactId>jlib-parent</artifactId>
-	<version>0.2-SNAPSHOT</version>
+	<version>0.3-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Swoop Java Utils</name>
 	<url>http://maven.apache.org</url>
