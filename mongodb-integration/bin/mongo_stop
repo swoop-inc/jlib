@@ -1,0 +1,16 @@
+#!/bin/bash
+#
+# Stop mongod if it is running.
+#
+
+cd $( dirname "$0" )/..
+
+PORT=27018
+
+mongo localhost:$PORT/admin << EOF > /dev/null 2>&1
+db.shutdownServer()
+EOF
+
+echo
+echo "'mongod' on port $PORT stopped."
+echo

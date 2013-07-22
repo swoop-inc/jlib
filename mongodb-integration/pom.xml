@@ -38,6 +38,22 @@
 					</execution>
 				</executions>
 			</plugin>
+                        <plugin>
+                          <groupId>org.codehaus.mojo</groupId>
+                          <artifactId>exec-maven-plugin</artifactId>
+                          <executions>
+                            <execution>
+                              <id>stop-mongod</id>
+                              <phase>verify</phase>
+                              <goals>
+                                <goal>exec</goal>
+                              </goals>
+                              <configuration>
+                                <executable>bin/mongo_stop</executable>
+                              </configuration>
+                            </execution>
+                          </executions>
+                        </plugin>
 		</plugins>
 	</build>
 

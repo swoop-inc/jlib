@@ -63,6 +63,11 @@ public class MongoCollectionClient
 		this.keyField = keyField;
 	}
 
+	public String getKeyField()
+	{
+		return keyField;
+	}
+
 	/**
 	 * For error messages.
 	 */

@@ -49,9 +49,11 @@ while [ ! -f mongo/data/mongod.lock ] && [ $i -gt 0 ] ; do
     i=$(( $i - 1 ))
 done
 
+echo
 if [ -s mongo/data/mongod.lock ] ; then
-    echo "'mongod' started."
+    echo "'mongod' on port $PORT started."
 else
-    echo "Unable to start 'mongod'."
+    echo "Unable to start 'mongod' on port $PORT."
     exit 1
 fi
+echo

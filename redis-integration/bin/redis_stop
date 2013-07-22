@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# Stop the redis server if it is running.
+#
+
+cd $( dirname "$0" )/..
+
+PORT=6380
+
+# Check for redis server already running
+redis-cli -p $PORT SHUTDOWN >/dev/null 2>&1
+
+echo
+echo "'redis-server' on port $PORT is stopped."
+echo

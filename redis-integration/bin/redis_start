@@ -28,15 +28,18 @@ fi
 redis-server --port $PORT >redis/redis.log 2>&1 &
 
 # Wait a few seconds for redis to start up.
-i=6
-while [ ! redis-cli -p $PORT ping >/dev/null 2>&1 ] && [ $i -gt 0 ] ; do
+i=10
+while [ $i -gt 0 ] && ! redis-cli -p $PORT ping > /dev/null 2>&1 ; do
     sleep 1
     i=$(( $i - 1 ))
 done
 
-if [ redis-cli -p $PORT ping >/dev/null 2>&1 ] ; then
-    echo "'redis-server' started."
+redis-cli -p $PORT ping > /dev/null 2>&1
+echo
+if [ $? = 0 ] ; then
+    echo "'redis-server' on port $PORT started."
 else
-    echo "Unable to start 'redis-server'."
+    echo "Unable to start 'redis-server' on port $PORT."
     exit 1
 fi
+echo
