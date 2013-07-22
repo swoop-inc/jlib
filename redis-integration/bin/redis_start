@@ -24,8 +24,9 @@ if [ $? = 0 ] ; then
     exit 0
 fi
 
+echo "port $PORT" > /tmp/redis.conf
 # Start up server in the background.
-redis-server --port $PORT >redis/redis.log 2>&1 &
+redis-server /tmp/redis.conf > redis/redis.log 2>&1 &
 
 # Wait a few seconds for redis to start up.
 i=10
@@ -34,8 +35,8 @@ while [ $i -gt 0 ] && ! redis-cli -p $PORT ping > /dev/null 2>&1 ; do
     i=$(( $i - 1 ))
 done
 
-redis-cli -p $PORT ping > /dev/null 2>&1
 echo
+redis-cli -p $PORT ping > /dev/null 2>&1
 if [ $? = 0 ] ; then
     echo "'redis-server' on port $PORT started."
 else
