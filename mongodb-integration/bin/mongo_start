@@ -5,7 +5,8 @@
 
 cd $( dirname "$0" )/..
 
-PORT=27018
+# port 27017, 27018, and 27019 are used by mongod RS setup in integration node
+PORT=27027
 
 # Check for mongo installation
 if ! which mongo > /dev/null ; then
