@@ -37,7 +37,12 @@ if [ -f mongo/mongod.lock ] ; then
 fi
 
 # Initialize directory structure.
-mkdir -p mongo/data
+if [ -d /media/ephemeral1/tmp ] ; then
+    mkdir -p /media/ephemeral1/tmp/jlib/mongodb-integration/data
+    ln -sf /media/ephemeral1/tmp/jlib/mongodb-integration/data mongo/
+else
+    mkdir -p mongo/data
+fi
 /bin/rm -f mongo/data/mongod.lock
 
 # Start up server in the background.
