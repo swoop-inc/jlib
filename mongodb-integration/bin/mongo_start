@@ -18,11 +18,14 @@ if ! which mongod > /dev/null ; then
     exit 1
 fi
 
+function check_mongo()
+{
+    mongo localhost:$PORT/test < /dev/null > /dev/null 2>&1
+    return $?
+}
+
 # Check for mongo server already running
-mongo localhost:$PORT/test << EOF > /dev/null 2>&1
-exit
-EOF
-if [ $? = 0 ] ; then
+if check_mongo ; then
     echo "'mongod' is already running."
     exit 0
 fi
@@ -49,14 +52,14 @@ fi
 mongod --port $PORT --fork --dbpath=mongo/data --logpath=mongo/mongodb.log > /dev/null
 
 # Wait a few seconds for Mongod to start up.
-i=6
-while [ ! -f mongo/data/mongod.lock ] && [ $i -gt 0 ] ; do
+i=15
+while [ $i -gt 0 ] && ! check_mongo ; do
     sleep 1
     i=$(( $i - 1 ))
 done
 
 echo
-if [ -s mongo/data/mongod.lock ] ; then
+if check_mongo ; then
     echo "'mongod' on port $PORT started."
 else
     echo "Unable to start 'mongod' on port $PORT."
