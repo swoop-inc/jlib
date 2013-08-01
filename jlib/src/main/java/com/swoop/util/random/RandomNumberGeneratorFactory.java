@@ -1,7 +1,7 @@
 package com.swoop.util.random;
 
 /**
- * Factory interface for {@link com.swoop.util.RandomNumberGenerator}.
+ * Factory interface for {@link com.swoop.util.random.RandomNumberGenerator}.
  */
 public interface RandomNumberGeneratorFactory
 {

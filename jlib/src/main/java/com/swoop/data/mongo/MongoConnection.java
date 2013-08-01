@@ -22,6 +22,7 @@ class MongoConnection
 	/**
 	 * Default constructor.  Connects to the default local MongoDB instance.
 	 */
+	@SuppressWarnings("deprecation")
 	MongoConnection()
 	{
 		this.uri = new MongoURI("mongodb://localhost/test");
@@ -32,6 +33,7 @@ class MongoConnection
 	 * @param uriString
 	 *    the connection information, encoded as a MongoDB URI  (see MongoDB driver documentation)
 	 */
+	@SuppressWarnings("deprecation")
 	MongoConnection(String uriString)
 	{
 		this.uri = new MongoURI(uriString);
@@ -49,6 +51,7 @@ class MongoConnection
 	/**
 	 * @inheritDoc
 	 */
+	@SuppressWarnings("deprecation")
 	@Override
 	public DB open()
 		throws IOException

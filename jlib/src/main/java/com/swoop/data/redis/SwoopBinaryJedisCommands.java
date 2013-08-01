@@ -20,7 +20,7 @@ public interface SwoopBinaryJedisCommands extends BinaryJedisCommands
 
     /**
      * Set the the respective keys to the respective values. MSET will replace
-     * old values with new values, while {@link #msetnx(String...) MSETNX} will
+     * old values with new values, while {@link #msetnx(byte[]...) MSETNX} will
      * not perform any operation at all even if just a single key already
      * exists.
      * <p>
@@ -33,7 +33,7 @@ public interface SwoopBinaryJedisCommands extends BinaryJedisCommands
      * either see the changes to both A and B at once, or no modification at
      * all.
      * 
-     * @see #msetnx(String...)
+     * @see #msetnx(byte[]...)
      * 
      * @param keysvalues
      * @return Status code reply Basically +OK as MSET can't fail
