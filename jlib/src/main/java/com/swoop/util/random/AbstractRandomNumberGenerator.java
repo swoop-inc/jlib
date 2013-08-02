@@ -1,7 +1,8 @@
 package com.swoop.util.random;
 
 /**
- * A base class for a RNG implementation.
+ * A base class for a RNG implementation.  Implements nextLong() and nextDouble() in terms of nextInt().
+ * Subclasses may provide just a 32-bit randomization.
  */
 abstract public class AbstractRandomNumberGenerator
 	implements RandomNumberGenerator

@@ -8,11 +8,6 @@ public class DefaultRandomNumberGeneratorFactory
 	extends DefaultRandomNumberGenerator
 	implements RandomNumberGeneratorFactory
 {
-	/**
-	 * 
-	 */
-	private static final long	serialVersionUID	= 1950436770666356706L;
-
 	public DefaultRandomNumberGeneratorFactory()
 	{
 	}
