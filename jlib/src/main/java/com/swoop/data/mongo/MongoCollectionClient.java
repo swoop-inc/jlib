@@ -1,13 +1,13 @@
 package com.swoop.data.mongo;
 
 /**
- * A MongoCollectionClient works with a specific MongoDB collection.
+ * A MongoCollectionClient is a MongoClient that works with a specific MongoDB collection by default.
  */
 public class MongoCollectionClient
  extends MongoClient
 {
 	private String	collectionName;
-	private String	keyField	= "_id";
+	private String	keyField;
 
 	/**
 	 * Constructor.
@@ -45,7 +45,7 @@ public class MongoCollectionClient
 	}
 
 	/**
-	 * 
+	 * The name of the collection that this client queries by default.
 	 * @param collectionName
 	 */
 	public void setCollectionName(String collectionName)
@@ -54,18 +54,31 @@ public class MongoCollectionClient
 	}
 
 	/**
-	 * 
+	 * The field to use as document ID in place of the default (_id). 
 	 * @param keyField
-	 *            default is "_id"
 	 */
 	public void setKeyField(String keyField)
 	{
 		this.keyField = keyField;
 	}
 
+	/***
 	public String getKeyField()
 	{
 		return keyField;
+	}
+	***/
+
+	/**
+	 * Create a "find one" command that returns the document identified by the given value
+	 * of the key field.  If the key field is null, use the MongoDB document ID ("_id").
+	 * @see #setKeyField(String)
+	 */
+	public MongoCollectionCommand<?> createDefaultFindOneCommand(Object keyValue)
+	{
+		FindOneCommand findOneCommand = new DefaultFindOneCommand();
+		findOneCommand = keyField == null ? findOneCommand.queryId(keyValue) : findOneCommand.queryField(keyField, keyValue);
+		return findOneCommand;
 	}
 
 	/**
