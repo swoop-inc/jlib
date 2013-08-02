@@ -9,7 +9,7 @@ public class RedisConnectorConfig
 	public final static String DEFAULT_HOST = "localhost";
 	public final static int DEFAULT_PORT = 6379;
 	public final static int DEFAULT_DATABASE = 0;
-	public final static int DEFAULT_TIMEOUT_MILLIS = 10000;
+	public final static int DEFAULT_TIMEOUT_MILLIS = 3000;
 
 	private String host = DEFAULT_HOST;
 	private int port = DEFAULT_PORT;
