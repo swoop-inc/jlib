@@ -1,10 +1,12 @@
 package com.swoop.data.redis;
 
+import java.io.IOException;
+import java.util.Stack;
+
 import com.swoop.data.util.Connection;
 import com.swoop.data.util.ConnectionMonitor;
 
 import redis.clients.jedis.exceptions.JedisException;
-import java.io.IOException;
 
 /**
  * Implementation of RedisConnector based on the Jedis driver.
@@ -12,16 +14,23 @@ import java.io.IOException;
 public class DefaultRedisConnector
 	implements RedisConnector
 {
-	private ConnectionMonitor<SwoopBinaryJedisCommands> conn;
+	private final static int DEFAULT_POOL_SIZE = 2;
+
+	private RedisConnectorConfig config;
+	private Stack<ConnectionMonitor<SwoopBinaryJedisCommands>> available
+		= new Stack<ConnectionMonitor<SwoopBinaryJedisCommands>>();
 
 	public DefaultRedisConnector()
 	{
-		this(new RedisConnection());
+		this(new RedisConnectorConfig());
 	}
 
 	public DefaultRedisConnector(RedisConnectorConfig config)
 	{
-		this(new RedisConnection(config.copy()));
+		this.config = config.copy();
+		for (int i = 0; i < DEFAULT_POOL_SIZE; ++i) {
+			available.push(new ConnectionMonitor<SwoopBinaryJedisCommands>(new RedisConnection(this.config)));
+		}
 	}
 
 	/**
@@ -29,7 +38,8 @@ public class DefaultRedisConnector
 	 */
 	public DefaultRedisConnector(Connection<SwoopBinaryJedisCommands> connection)
 	{
-		this.conn = new ConnectionMonitor<SwoopBinaryJedisCommands>(connection);
+		this.config = new RedisConnectorConfig();
+		available.push(new ConnectionMonitor<SwoopBinaryJedisCommands>(connection));
 	}
 
 	/**
@@ -40,12 +50,13 @@ public class DefaultRedisConnector
 		throws IOException
 	{
 		try {
+			ConnectionMonitor<SwoopBinaryJedisCommands> conn = waitForConnection();
 			SwoopBinaryJedisCommands jedis = conn.use();
 			try {
 				return command.execute(jedis);
 			}
 			finally {
-				conn.release();
+				reuseConnection(conn);
 			}
 		}
 		catch (JedisException e) {
@@ -57,6 +68,29 @@ public class DefaultRedisConnector
 	@Override
 	public String toString()
 	{
-		return conn.toString();
+		return config.toString();
+	}
+
+	private ConnectionMonitor<SwoopBinaryJedisCommands> waitForConnection()
+	{
+		synchronized (available) {
+			while (available.isEmpty()) {
+				try {
+					available.wait();
+				}
+				catch (InterruptedException e) {
+				}
+			}
+			return available.pop();
+		}
+	}
+	
+	private void reuseConnection(ConnectionMonitor<SwoopBinaryJedisCommands> conn)
+	{
+		conn.release();
+		synchronized (available) {
+			available.push(conn);
+			available.notifyAll();
+		}
 	}
 }
