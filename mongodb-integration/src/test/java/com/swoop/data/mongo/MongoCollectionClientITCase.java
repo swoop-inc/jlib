@@ -15,7 +15,7 @@ public class MongoCollectionClientITCase
 	public static void setUpOnce() throws Exception
 	{
 		connector = createDbConnector();
-		MongoCollectionClient client = makeClient();
+		MongoCollectionConnector client = makeClient();
 
 		// Some test data...
 		client.executeCommand(new InsertCommand()
@@ -35,9 +35,9 @@ public class MongoCollectionClientITCase
 			.objectField("c", 30));
 	}
 
-	private static MongoCollectionClient makeClient()
+	private static MongoCollectionConnector makeClient()
 	{
-		return new MongoCollectionClient(connector, COLLECTION_NAME);
+		return new MongoCollectionConnector(connector, COLLECTION_NAME);
 	}
 
 	@AfterClass
@@ -52,7 +52,7 @@ public class MongoCollectionClientITCase
 	public void testFindOneByIdNegative() throws Exception
 	{
 		if (connector != null) {
-			MongoCollectionClient client = makeClient();
+			MongoCollectionConnector client = makeClient();
 			assertNull(client.executeCommand(client.createDefaultFindOneCommand("lmnop")));
 		}
 	}
@@ -61,7 +61,7 @@ public class MongoCollectionClientITCase
 	public void testFindOneByIdPositive() throws Exception
 	{
 		if (connector != null) {
-			MongoCollectionClient client = makeClient();
+			MongoCollectionConnector client = makeClient();
 			assertNotNull(client.executeCommand(client.createDefaultFindOneCommand("abc")));
 		}
 	}
@@ -70,7 +70,7 @@ public class MongoCollectionClientITCase
 	public void testFindOneByFieldNegative() throws Exception
 	{
 		if (connector != null) {
-			MongoCollectionClient client = makeClient();
+			MongoCollectionConnector client = makeClient();
 			client.setKeyField("id");
 			assertNull(client.executeCommand(client.createDefaultFindOneCommand("lmnop")));
 		}
@@ -80,7 +80,7 @@ public class MongoCollectionClientITCase
 	public void testFindOneByFieldPositive() throws Exception
 	{
 		if (connector != null) {
-			MongoCollectionClient client = makeClient();
+			MongoCollectionConnector client = makeClient();
 			client.setKeyField("id");
 			assertNotNull(client.executeCommand(client.createDefaultFindOneCommand("abc")));
 		}
