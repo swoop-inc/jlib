@@ -92,7 +92,7 @@ class MongoConnection
 	public String toString()
 	{
 		// DO NOT LEAK PASSWORD HERE!
-		return "[MongoDB:" + uri.getHosts() + "," + uri.getDatabase() + "]";
+		return "mongodb://" + uri.getHosts() + "/" + uri.getDatabase();
 	}
 
 	//
