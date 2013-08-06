@@ -20,23 +20,24 @@ class MongoConnection
 	private DB db;
 
 	/**
-	 * Default constructor.  Connects to the default local MongoDB instance.
+	 * Constructor.
+	 * @param connectionString
+	 *    the connection information, encoded in MongoDB URI format (see MongoDB driver documentation)
 	 */
 	@SuppressWarnings("deprecation")
-	MongoConnection()
+	MongoConnection(String connectionString)
 	{
-		this.uri = new MongoURI("mongodb://localhost/test");
+		this(new MongoURI(connectionString));
 	}
 
 	/**
 	 * Constructor.
-	 * @param uriString
-	 *    the connection information, encoded as a MongoDB URI  (see MongoDB driver documentation)
+	 * @param uri
+	 *    a MongoDB URI  (see MongoDB driver documentation)
 	 */
-	@SuppressWarnings("deprecation")
-	MongoConnection(String uriString)
+	MongoConnection(MongoURI uri)
 	{
-		this.uri = new MongoURI(uriString);
+		this.uri = uri;
 	}
 
 	/**
@@ -91,7 +92,7 @@ class MongoConnection
 	public String toString()
 	{
 		// DO NOT LEAK PASSWORD HERE!
-		return "[MongoDB:" + uri.getHosts() + "," + uri.getDatabase() + "]";
+		return "mongodb://" + uri.getHosts() + "/" + uri.getDatabase();
 	}
 
 	//

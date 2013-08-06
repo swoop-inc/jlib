@@ -10,11 +10,9 @@ import java.util.TimerTask;
  */
 public class ConnectionMonitor<H>
 {
-	public final static int DEFAULT_MAX_IDLE_MILLIS = 10 * 10000;
-
 	private Connection<H> connection;
 	private int useCount;
-	private int maxIdleMillis = DEFAULT_MAX_IDLE_MILLIS;
+	private int maxIdleMillis;
 	private Timer idleTimer;
 
 	public ConnectionMonitor(Connection<H> connection)
