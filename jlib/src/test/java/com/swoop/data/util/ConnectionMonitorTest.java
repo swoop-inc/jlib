@@ -35,7 +35,7 @@ public class ConnectionMonitorTest
 	public void testDefaultMaxIdleMillis() throws Exception
 	{
 		ConnectionMonitor<Handle> monitor = new ConnectionMonitor<Handle>(new DummyConnection());
-		assertEquals(ConnectionMonitor.DEFAULT_MAX_IDLE_MILLIS, monitor.getMaxIdleMillis());
+		assertEquals(0, monitor.getMaxIdleMillis());
 	}
 
 	@Test

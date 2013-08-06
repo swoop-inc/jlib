@@ -13,7 +13,7 @@ public class FindOneITCase
 	@BeforeClass
 	public static void setUp() throws Exception
 	{
-		connector = new DefaultMongoCollectionConnector(createDbConnector(), "stuff");
+		connector = new MongoCollectionConnector(createDbConnector(), "stuff");
 
 		// Some test data...
 		connector.executeCommand(new InsertCommand()

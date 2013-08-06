@@ -13,7 +13,7 @@ public class UpdateITCase
 	@BeforeClass
 	public static void setUp() throws Exception
 	{
-		connector = new DefaultMongoCollectionConnector(createDbConnector(), "stuff");
+		connector = new MongoCollectionConnector(createDbConnector(), "stuff");
 
 		// Test data...
 		connector.executeCommand(new InsertCommand()
