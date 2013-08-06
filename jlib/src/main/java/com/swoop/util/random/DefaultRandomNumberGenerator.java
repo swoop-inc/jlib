@@ -9,11 +9,6 @@ public class DefaultRandomNumberGenerator
 	extends java.util.Random
 	implements RandomNumberGenerator
 {
-	/**
-	 * 
-	 */
-	private static final long	serialVersionUID	= 5915246310638751480L;
-
 	public DefaultRandomNumberGenerator()
 	{
 	}
