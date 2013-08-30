@@ -6,6 +6,11 @@ import java.util.List;
 
 public interface SwoopBinaryJedisCommands extends BinaryJedisCommands
 {
+	/**
+	 * Delete is missing from interface in 2.1.0!?!
+	 */
+	Long del(byte[] key);
+
     /**
      * Get the values of all the specified keys. If one or more keys dont exist
      * or is not of type String, a 'nil' value is returned instead of the value
@@ -16,7 +21,7 @@ public interface SwoopBinaryJedisCommands extends BinaryJedisCommands
      * @param keys
      * @return Multi bulk reply
      */
-    List<byte[]> mget(final byte[]... keys);
+    List<byte[]> mget(byte[]... keys);
 
     /**
      * Set the the respective keys to the respective values. MSET will replace
@@ -38,7 +43,7 @@ public interface SwoopBinaryJedisCommands extends BinaryJedisCommands
      * @param keysvalues
      * @return Status code reply Basically +OK as MSET can't fail
      */
-    String mset(final byte[]... keysvalues);
+    String mset(byte[]... keysvalues);
     
     /**
      * Starts a pipeline, which is a very efficient way to send lots of command

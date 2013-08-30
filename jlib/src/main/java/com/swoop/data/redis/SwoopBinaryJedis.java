@@ -5,7 +5,6 @@ import redis.clients.jedis.JedisShardInfo;
 
 public class SwoopBinaryJedis extends BinaryJedis implements SwoopBinaryJedisCommands
 {
-
 	public SwoopBinaryJedis(JedisShardInfo shardInfo)
 	{
 		super(shardInfo);
@@ -24,5 +23,15 @@ public class SwoopBinaryJedis extends BinaryJedis implements SwoopBinaryJedisCom
 	public SwoopBinaryJedis(String host)
 	{
 		super(host);
+	}
+
+	/**
+	 * Strangely absent from 2.1.0.
+	 */
+	public Long del(byte[] key)
+	{
+		checkIsInMulti();
+		getClient().del(key);
+		return getClient().getIntegerReply();
 	}
 }
