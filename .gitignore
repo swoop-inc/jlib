@@ -1,4 +1,6 @@
 target/
+.settings/
+.metadata/
 .DS_Store
 *.swp
 .classpath
