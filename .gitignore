@@ -5,3 +5,4 @@ target/
 .project
 jlib/.settings/
 mongodb-integration/.settings/
+redis-integration/.settings/
