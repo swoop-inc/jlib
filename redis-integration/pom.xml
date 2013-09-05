@@ -15,42 +15,53 @@
 		<version>0.3-SNAPSHOT</version>
 	</parent>
 
-	<build>
-		<plugins>
-			<!-- Failsafe integration tests -->
-			<plugin>
-				<artifactId>maven-failsafe-plugin</artifactId>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>exec-maven-plugin</artifactId>
-				<executions>
-					<!-- Start up redis before running tests -->
-					<execution>
-						<id>start-redis</id>
-						<phase>pre-integration-test</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>bin/redis_start</executable>
-						</configuration>
-					</execution>
-					<!-- Stop redis after running tests -->
-					<execution>
-						<id>stop-redis</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>exec</goal>
-						</goals>
-						<configuration>
-							<executable>bin/redis_stop</executable>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
+	<profiles>
+		<profile>
+			<id>skip-redis-integration-test</id>  <!-- activate this profile to skip integration test -->
+		</profile>
+		<profile>
+			<id>run-redis-integration-test</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<build>
+				<plugins>
+					<!-- Failsafe integration tests -->
+					<plugin>
+						<artifactId>maven-failsafe-plugin</artifactId>
+					</plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>exec-maven-plugin</artifactId>
+						<executions>
+							<!-- Start up redis before running tests -->
+							<execution>
+								<id>start-redis</id>
+								<phase>pre-integration-test</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>bin/redis_start</executable>
+								</configuration>
+							</execution>
+							<!-- Stop redis after running tests -->
+							<execution>
+								<id>stop-redis</id>
+								<phase>verify</phase>
+								<goals>
+									<goal>exec</goal>
+								</goals>
+								<configuration>
+									<executable>bin/redis_stop</executable>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 	<reporting>
 		<plugins>
