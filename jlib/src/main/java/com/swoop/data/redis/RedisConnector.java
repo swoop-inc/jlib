@@ -13,4 +13,9 @@ public interface RedisConnector
 	 */
 	public <T> T execute(RedisCommand<T> command)
 		throws java.io.IOException;
+
+	/**
+	 * For error messages.
+	 */
+	public String toString();
 }
