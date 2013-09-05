@@ -1,55 +1,74 @@
 package com.swoop.data.redis;
 
+import static com.swoop.data.redis.RedisUri.*;
 import org.junit.*;
 import static org.junit.Assert.*;
 
 public class RedisUriTest
 {
 	@Test
-	public void testDefaultToString() throws Exception
+	public void testDefaults() throws Exception
 	{
-		RedisConnectorConfig redisUri = new RedisConnectorConfig();
+		RedisUri redisUri = new RedisUri();
+		assertEquals(DEFAULT_HOST, redisUri.getHost());
+		assertEquals(DEFAULT_PORT, redisUri.getPort());
+		assertEquals(DEFAULT_DATABASE, redisUri.getDatabase());
+		assertNull(redisUri.getPassword());
 		assertEquals("redis://localhost/0", redisUri.toString());
 	}
 
 	@Test
-	public void testSetPasswordToString() throws Exception
+	public void testHost() throws Exception
 	{
-		RedisConnectorConfig redisUri = new RedisConnectorConfig();
-		redisUri.setPassword("whatever");
+		RedisUri redisUri = new RedisUri("//reddy");
+		assertEquals("reddy", redisUri.getHost());
+		assertEquals(DEFAULT_PORT, redisUri.getPort());
+		assertEquals(DEFAULT_DATABASE, redisUri.getDatabase());
+		assertNull(redisUri.getPassword());
+		assertEquals("redis://reddy/0", redisUri.toString());
+	}
+
+	@Test
+	public void testHostAndPort() throws Exception
+	{
+		RedisUri redisUri = new RedisUri("//reddy:9898");
+		assertEquals("reddy", redisUri.getHost());
+		assertEquals(9898, redisUri.getPort());
+		assertEquals(DEFAULT_DATABASE, redisUri.getDatabase());
+		assertNull(redisUri.getPassword());
+		assertEquals("redis://reddy:9898/0", redisUri.toString());
+	}
+
+	@Test
+	public void testPasswordAndHost() throws Exception
+	{
+		RedisUri redisUri = new RedisUri("redis://whatever@localhost/");
+		assertEquals("localhost", redisUri.getHost());
+		assertEquals(DEFAULT_PORT, redisUri.getPort());
+		assertEquals(DEFAULT_DATABASE, redisUri.getDatabase());
+		assertEquals("whatever", redisUri.getPassword());
 		assertEquals("redis://((password))@localhost/0", redisUri.toString());
 	}
 
 	@Test
-	public void testSetHostToString() throws Exception
+	public void testDatabase() throws Exception
 	{
-		RedisConnectorConfig redisUri = new RedisConnectorConfig();
-		redisUri.setHost("redis.example.com");
-		assertEquals("redis://redis.example.com/0", redisUri.toString());
-	}
-
-	@Test
-	public void testSetHostAndPasswordToString() throws Exception
-	{
-		RedisConnectorConfig redisUri = new RedisConnectorConfig();
-		redisUri.setHost("momma.example.com");
-		redisUri.setPassword("top secret");
-		assertEquals("redis://((password))@momma.example.com/0", redisUri.toString());
-	}
-
-	@Test
-	public void testSetDatabaseToString() throws Exception
-	{
-		RedisConnectorConfig redisUri = new RedisConnectorConfig();
-		redisUri.setDatabase(10);
+		RedisUri redisUri = new RedisUri("/10");
+		assertEquals(DEFAULT_HOST, redisUri.getHost());
+		assertEquals(DEFAULT_PORT, redisUri.getPort());
+		assertEquals(10, redisUri.getDatabase());
+		assertNull(redisUri.getPassword());
 		assertEquals("redis://localhost/10", redisUri.toString());
 	}
 
 	@Test
-	public void testSetPortToString() throws Exception
+	public void testHostAndDatabase() throws Exception
 	{
-		RedisConnectorConfig redisUri = new RedisConnectorConfig();
-		redisUri.setPort(9898);
-		assertEquals("redis://localhost:9898/0", redisUri.toString());
+		RedisUri redisUri = new RedisUri("redis://big.example.com/5");
+		assertEquals("big.example.com", redisUri.getHost());
+		assertEquals(DEFAULT_PORT, redisUri.getPort());
+		assertEquals(5, redisUri.getDatabase());
+		assertNull(redisUri.getPassword());
+		assertEquals("redis://big.example.com/5", redisUri.toString());
 	}
 }
