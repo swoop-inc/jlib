@@ -8,6 +8,6 @@ public class RedisTestCase
 	{
 		RedisConnectorConfig config = new RedisConnectorConfig();
 		config.setUri(new RedisUri("redis://localhost:" + REDIS_PORT));
-		return new DefaultRedisConnector(config);
+		return new RedisConnector(config);
 	}
 }

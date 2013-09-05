@@ -8,9 +8,11 @@ public class RedisConnectorConfig
 {
 	public final static RedisUri DEFAULT_URI = new RedisUri();
 	public final static int DEFAULT_TIMEOUT_MILLIS = 3000;
+	public final static int DEFAULT_CONCURRENCY = 3;
 
 	private RedisUri uri = DEFAULT_URI;
 	private int timeoutMillis = DEFAULT_TIMEOUT_MILLIS;
+	private int concurrency = DEFAULT_CONCURRENCY;
 
 	public void setUri(RedisUri uri)
 	{
@@ -30,6 +32,16 @@ public class RedisConnectorConfig
 	public int getTimeoutMillis()
 	{
 		return timeoutMillis;
+	}
+
+	public void setConcurrency(int concurrency)
+	{
+		this.concurrency = concurrency;
+	}
+
+	public int getConcurrency()
+	{
+		return concurrency;
 	}
 
 	@Override

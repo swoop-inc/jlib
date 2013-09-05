@@ -4,15 +4,15 @@ package com.swoop.data.redis;
  * A RedisConnector that proxies to a second RedisConnector.
  */
 public class ProxyRedisConnector
-	implements RedisConnector
+	implements IRedisConnector
 {
-	private RedisConnector inner;
+	private IRedisConnector inner;
 
 	/**
 	 * Constructor.
 	 * @param connector   the connector for execution
 	 */
-	public ProxyRedisConnector(RedisConnector inner)
+	public ProxyRedisConnector(IRedisConnector inner)
 	{
 		this.inner = inner;
 	}
@@ -25,14 +25,5 @@ public class ProxyRedisConnector
 		throws java.io.IOException
 	{
 		return inner.execute(command);
-	}
-
-	/**
-	 * @inheritDoc
-	 */
-	@Override
-	public String toString()
-	{
-		return inner.toString();
 	}
 }
