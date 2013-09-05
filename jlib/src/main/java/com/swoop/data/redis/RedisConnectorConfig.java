@@ -69,7 +69,20 @@ public class RedisConnectorConfig
 
 	public String toString()
 	{
-		return "jedis://" + getHost() + ":" + getPort() + "/" + getDatabase();
+		StringBuilder buf = new StringBuilder();
+		buf.append("redis://");
+		// Caution: Do not display password!
+		if (getPassword() != null) {
+			buf.append("((password))@");
+		}
+		buf.append(getHost());
+		if (getPort() != DEFAULT_PORT) {
+			buf.append(":");
+			buf.append(getPort());
+		}
+		buf.append("/");
+		buf.append(getDatabase());
+		return buf.toString();
 	}
 
 	public RedisConnectorConfig copy()
