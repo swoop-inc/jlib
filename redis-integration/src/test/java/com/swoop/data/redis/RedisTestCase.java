@@ -7,7 +7,7 @@ public class RedisTestCase
 	public static RedisConnector createRedisConnector() throws Exception
 	{
 		RedisConnectorConfig config = new RedisConnectorConfig();
-		config.setPort(REDIS_PORT);
-		return new DefaultRedisConnector(config);
+		config.setUri(new RedisUri("redis://localhost:" + REDIS_PORT));
+		return new RedisConnector(config);
 	}
 }

@@ -4,7 +4,6 @@ import com.swoop.data.util.Connection;
 
 import redis.clients.jedis.exceptions.JedisException;
 import java.io.IOException;
-// TODO: try using the redis-protocol driver for better efficiency
 
 /**
  * Implementation of RedisConnector based on the Jedis driver.
@@ -31,18 +30,18 @@ public class RedisConnection
 	{
 		try {
 			if (!isOpen()) {
-				jedis = new SwoopBinaryJedis(config.getHost(), config.getPort(), config.getTimeoutMillis());
+				jedis = new SwoopBinaryJedis(config.getUri().getHost(), config.getUri().getPort(), config.getTimeoutMillis());
 				// select() implicitly connects.  Set authentication info first.
-				if (config.getPassword() != null) {
-					jedis.auth(config.getPassword());
+				if (config.getUri().getPassword() != null) {
+					jedis.auth(config.getUri().getPassword());
 				}
-				jedis.select(config.getDatabase());
+				jedis.select(config.getUri().getDatabase());
 				jedis.connect();
 			}
 			return jedis;
 		}
 		catch (JedisException e) {
-			throw new IOException(config.toString() + ": connection error", e);
+			throw new IOException(config + ": connection error", e);
 		}
 	}
 

@@ -6,55 +6,22 @@ package com.swoop.data.redis;
 public class RedisConnectorConfig 
 	implements Cloneable
 {
-	public final static String DEFAULT_HOST = "localhost";
-	public final static int DEFAULT_PORT = 6379;
-	public final static int DEFAULT_DATABASE = 0;
+	public final static RedisUri DEFAULT_URI = new RedisUri();
 	public final static int DEFAULT_TIMEOUT_MILLIS = 3000;
+	public final static int DEFAULT_CONCURRENCY = 3;
 
-	private String host = DEFAULT_HOST;
-	private int port = DEFAULT_PORT;
-	private String password;
-	private int database = DEFAULT_DATABASE;
+	private RedisUri uri = DEFAULT_URI;
 	private int timeoutMillis = DEFAULT_TIMEOUT_MILLIS;
+	private int concurrency = DEFAULT_CONCURRENCY;
 
-	public void setHost(String host)
+	public void setUri(RedisUri uri)
 	{
-		this.host = host;
+		this.uri = uri;
 	}
 
-	public String getHost()
+	public RedisUri getUri()
 	{
-		return host;
-	}
-
-	public void setPort(int port)
-	{
-		this.port = port;
-	}
-
-	public int getPort()
-	{
-		return port;
-	}
-
-	public void setPassword(String password)
-	{
-		this.password = password;
-	}
-
-	public String getPassword()
-	{
-		return password;
-	}
-
-	public void setDatabase(int database)
-	{
-		this.database = database;
-	}
-
-	public int getDatabase()
-	{
-		return database;
+		return uri;
 	}
 
 	public void setTimeoutMillis(int timeoutMillis)
@@ -67,9 +34,20 @@ public class RedisConnectorConfig
 		return timeoutMillis;
 	}
 
+	public void setConcurrency(int concurrency)
+	{
+		this.concurrency = concurrency;
+	}
+
+	public int getConcurrency()
+	{
+		return concurrency;
+	}
+
+	@Override
 	public String toString()
 	{
-		return "jedis://" + getHost() + ":" + getPort() + "/" + getDatabase();
+		return uri.toString();
 	}
 
 	public RedisConnectorConfig copy()
