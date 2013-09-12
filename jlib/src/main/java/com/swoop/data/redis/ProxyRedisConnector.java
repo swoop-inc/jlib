@@ -26,4 +26,13 @@ public class ProxyRedisConnector
 	{
 		return inner.execute(command);
 	}
+
+	/**
+	 * @inheritDoc
+	 */
+	@Override
+	public String toString()
+	{
+		return inner.toString();
+	}
 }
