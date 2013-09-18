@@ -17,7 +17,9 @@ public class MongoConfiguration
 {
 	public final static int DEFAULT_MAX_IDLE_MILLIS = 10 * 10000;
 
-	public final static String DEFAULT_DEFAULT_CONNECTION_STRING = "mongodb://localhost/test";
+//	public final static String DEFAULT_DEFAULT_CONNECTION_STRING = "mongodb://localhost/test";
+	// TODO: review what's a sensible default and implement overriding in swoop2front *and* swoop-es (elasticsearch.yml)
+	public final static String DEFAULT_DEFAULT_CONNECTION_STRING = "mongodb://localhost/prod";
 
 	/**
 	 * Singleton instance used by default by MongoConnector constructors.
