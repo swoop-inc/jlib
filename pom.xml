@@ -146,6 +146,16 @@
 				<version>2.1.0</version>
 			</dependency>
 			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.7.4</version>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.7.4</version>
+			</dependency>
+			<dependency>
 				<groupId>net.ech</groupId>
 				<artifactId>jujube</artifactId>
 				<version>0.1.3</version>

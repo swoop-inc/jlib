@@ -1,12 +1,15 @@
 package com.swoop.data.redis;
 
-import java.io.IOException;
-import java.util.Stack;
-
 import com.swoop.data.util.Connection;
 import com.swoop.data.util.ConnectionMonitor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import redis.clients.jedis.exceptions.JedisException;
+import java.io.IOException;
+import java.util.Stack;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * A Redis connector based on the Jedis driver.
@@ -14,6 +17,9 @@ import redis.clients.jedis.exceptions.JedisException;
 public class RedisConnector
 	implements IRedisConnector
 {
+	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+	protected final AtomicLong sequenceNumber = new AtomicLong(0);
+	
 	private RedisConnectorConfig config;
 	private Stack<ConnectionMonitor<SwoopBinaryJedisCommands>> available
 		= new Stack<ConnectionMonitor<SwoopBinaryJedisCommands>>();
@@ -75,6 +81,9 @@ public class RedisConnector
 	public final <T> T execute(RedisCommand<T> command)
 		throws IOException
 	{
+		long sqn = sequenceNumber.getAndIncrement();
+		logger.debug("BEGIN seqN={} redis execute command={}", sqn, command);
+		
 		try {
 			ConnectionMonitor<SwoopBinaryJedisCommands> conn = waitForConnection();
 			SwoopBinaryJedisCommands jedis = conn.use();
@@ -88,6 +97,8 @@ public class RedisConnector
 		catch (JedisException e) {
 			// Wrap all exceptions thrown by the driver in IOExceptions.
 			throw new IOException(this + ": " + command + ": data transfer error", e);
+		} finally {
+			logger.debug("END seqN={} redis run command", sqn);
 		}
 	}
 
