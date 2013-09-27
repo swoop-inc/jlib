@@ -11,8 +11,11 @@ import java.io.IOException;
 public class RedisConnection
 	implements Connection<SwoopBinaryJedisCommands>
 {
+	public final static long PING_FRESHNESS_MILLIS = 10*1000L;
+
 	private RedisConnectorConfig config;
 	private SwoopBinaryJedis jedis;
+	private long lastPing;
 
 	public RedisConnection()
 	{
@@ -37,6 +40,7 @@ public class RedisConnection
 				}
 				jedis.select(config.getUri().getDatabase());
 				jedis.connect();
+				lastPing = System.currentTimeMillis();
 			}
 			return jedis;
 		}
@@ -48,7 +52,7 @@ public class RedisConnection
 	@Override
 	public boolean isOpen()
 	{
-		return jedis != null;
+		return jedis != null && jedis.isConnected() && freshlyPinged();
 	}
 
 	@Override
@@ -64,5 +68,15 @@ public class RedisConnection
 	public String toString()
 	{
 		return config.toString();
+	}
+
+	private boolean freshlyPinged()
+	{
+		if (System.currentTimeMillis() - lastPing < PING_FRESHNESS_MILLIS) {
+			String pong = jedis.ping();
+			lastPing = System.currentTimeMillis();
+			return "PONG".equals(pong);
+		}
+		return true;
 	}
 }
