@@ -82,7 +82,7 @@ public class RedisConnector
 		throws IOException
 	{
 		long sqn = sequenceNumber.getAndIncrement();
-		logger.debug("BEGIN seqN={} redis execute command={}", sqn, command);
+		logger.debug("BEGIN seqN={} redis={} execute command={}", sqn, this, command);
 		
 		try {
 			ConnectionMonitor<SwoopBinaryJedisCommands> conn = waitForConnection();
