@@ -51,6 +51,28 @@ public class RedisUriTest
 	}
 
 	@Test
+	public void testEmptyUserNamePasswordAndHost() throws Exception
+	{
+		RedisUri redisUri = new RedisUri("redis://:whatever@localhost/");
+		assertEquals("localhost", redisUri.getHost());
+		assertEquals(DEFAULT_PORT, redisUri.getPort());
+		assertEquals(DEFAULT_DATABASE, redisUri.getDatabase());
+		assertEquals("whatever", redisUri.getPassword());
+		assertEquals("redis://((password))@localhost/0", redisUri.toString());
+	}
+
+	@Test
+	public void testUserNamePasswordAndHost() throws Exception
+	{
+		RedisUri redisUri = new RedisUri("redis://what:ever@localhost/");
+		assertEquals("localhost", redisUri.getHost());
+		assertEquals(DEFAULT_PORT, redisUri.getPort());
+		assertEquals(DEFAULT_DATABASE, redisUri.getDatabase());
+		assertEquals("ever", redisUri.getPassword());
+		assertEquals("redis://((password))@localhost/0", redisUri.toString());
+	}
+
+	@Test
 	public void testDatabase() throws Exception
 	{
 		RedisUri redisUri = new RedisUri("/10");

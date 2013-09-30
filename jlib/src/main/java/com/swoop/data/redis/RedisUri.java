@@ -43,7 +43,9 @@ public class RedisUri
 			this.port = uri.getPort();
 		}
 		if (uri.getUserInfo() != null) {
-			this.password = uri.getUserInfo();
+			String userInfo = uri.getUserInfo();
+			int colon = userInfo.indexOf(':');
+			this.password = colon >= 0 ? userInfo.substring(colon + 1) : userInfo;
 		}
 		if (uri.getPath() != null && !uri.getPath().equals("") && !uri.getPath().equals("/")) {
 			if (!uri.getPath().matches("/[\\d]{1,}")) {
