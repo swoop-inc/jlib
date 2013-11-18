@@ -1,10 +1,12 @@
 package com.swoop.data.mongo;
 
-import com.mongodb.DB;
-
-import com.swoop.data.util.Connection;
-
 import java.io.IOException;
+
+import org.slf4j.Logger;
+
+import com.mongodb.DB;
+import com.swoop.data.util.Connection;
+import com.swoop.util.TimedTask;
 
 /**
  * A MongoDB connector with an implicit collection name. 
@@ -98,6 +100,36 @@ public class MongoCollectionConnector
 		throws IOException
 	{
 		return executeCollectionCommand(collectionName, command);
+	}
+
+	/**
+	 * Execute a command on the implicit collection with the given timeOut.
+	 * 
+	 * When Java Mongo Driver honors timeout, this method should revert to
+	 * executeCommand (above).
+	 * 
+	 * @param command
+	 *            the command to execute
+	 * @param timeOut
+	 *            timeOut
+	 * @return whatever the command returns
+	 */
+	public <T> T timedExecuteCommand(final MongoCollectionCommand<T> command, final int timeOut, final Logger logger)
+		throws IOException
+	{
+		T dbo = new TimedTask<T>() {
+			@Override
+			public T doTask() throws IOException
+			{
+				long time = System.currentTimeMillis();
+				T result = executeCollectionCommand(collectionName, command);
+				time = System.currentTimeMillis() - time;
+				if (time > timeOut)
+					logger.error("MongoDB {} took {}ms", this, "" + time);
+				return result;
+			}
+		}.execute(timeOut);
+		return dbo;
 	}
 
 	@Override
