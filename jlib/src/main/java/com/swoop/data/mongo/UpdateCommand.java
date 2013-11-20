@@ -7,9 +7,8 @@ import com.mongodb.MongoException;
 import com.mongodb.WriteResult;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Map;
-
-import net.ech.util.Hash;
 
 /**
  * A MongoDB update command.
@@ -55,9 +54,9 @@ public class UpdateCommand
 	public UpdateCommand setObjectField(String key, Object value)
 	{
 		if (!object.containsKey("$set")) {
-			object.put("$set", new Hash());
+			object.put("$set", new HashMap<String,Object>());
 		}
-		((Hash) object.get("$set")).put(key, value);
+		((Map<String,Object>) object.get("$set")).put(key, value);
 		return this;
 	}
 
@@ -68,9 +67,9 @@ public class UpdateCommand
 	public UpdateCommand unsetObjectField(String key)
 	{
 		if (!object.containsKey("$unset")) {
-			object.put("$unset", new Hash());
+			object.put("$unset", new HashMap<String,Object>());
 		}
-		((Hash) object.get("$unset")).put(key, 1);
+		((Map<String,Object>) object.get("$unset")).put(key, 1);
 		return this;
 	}
 
