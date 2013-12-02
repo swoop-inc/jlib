@@ -6,5 +6,6 @@ target/
 .classpath
 .project
 jlib/.settings/
+jlib/eclipse/
 mongodb-integration/.settings/
 redis-integration/.settings/
