@@ -13,8 +13,9 @@ import java.io.IOException;
  */
 public abstract class TimedTask<T> implements Runnable
 {
-	private T			result		= null;
-	private IOException	exception	= null;
+	private T					result		= null;
+	private Exception			exception	= null;
+	private volatile boolean	expired		= false;
 
 	public T execute(int time) throws IOException
 	{
@@ -23,13 +24,17 @@ public abstract class TimedTask<T> implements Runnable
 			if (result == null && exception == null) {
 				try {
 					wait(time);
+					expired = true;
 				}
 				catch (InterruptedException e) {
 				}
 			}
 		}
-		if (exception != null)
-			throw exception;
+		if (exception != null) {
+			if (exception instanceof IOException)
+				throw (IOException)exception;
+			throw (RuntimeException)exception;
+		}
 		return result;
 	}
 
@@ -38,14 +43,23 @@ public abstract class TimedTask<T> implements Runnable
 	@Override
 	public void run()
 	{
+		// no need to synchronize here
+		if (expired)
+			return;
+
 		try {
 			result = doTask();
 		}
 		catch (IOException e) {
 			exception = e;
 		}
-		synchronized (this) {
-			notify();
+		catch (RuntimeException e) {
+			exception = e;
+		}
+		finally {
+			synchronized (this) {
+				notify();
+			}
 		}
 	}
 }
