@@ -44,4 +44,15 @@ public class HashTest
 		Hash hash = new Hash().a("a", "Apple").a("b", "Banana").a("c", "Cranberry");
 		assertEquals(expected, hash);
 	}
+
+	@Test
+	public void testAddPositive() throws Exception
+	{
+		Map<String,String> expected = new HashMap<String,String>();
+		expected.put("a", "Apple");
+		expected.put("b", "Banana");
+		expected.put("c", "Cranberry");
+		Hash hash = new Hash().ap("a", "Apple").ap("b", "Banana").ap("c", "Cranberry").ap("d", "Donut").ap("d", null);
+		assertEquals(expected, hash);
+	}
 }
