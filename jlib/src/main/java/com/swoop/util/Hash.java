@@ -54,6 +54,27 @@ public class Hash extends LinkedHashMap<String,Object>
     }
 
 	/**
+	 * Add an entry to this Hash, unless the given value is null, in which
+	 * case no entry is added.  In either case, any prior entry with the same
+	 * key is lost.
+	 * @param key
+	 *    key of the additional entry
+	 * @param value
+	 *    value of the additional entry
+	 * @return this Hash
+	 */
+    public Hash ap(String key, Object value)
+    {
+		if (value == null) {
+			remove(key);
+		}
+		else {
+			put(key, value);
+		}
+        return this;
+    }
+
+	/**
 	 * @deprecated use {@link #a(String,Object)}
 	 */
     public Hash addEntry(String key, Object value)
