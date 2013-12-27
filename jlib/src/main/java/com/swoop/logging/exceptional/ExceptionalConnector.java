@@ -15,10 +15,11 @@ import org.apache.http.entity.ByteArrayEntity;
 import org.apache.http.util.EntityUtils;
 
 /**
- * Sends reports to the exceptional.io API.
+ * ExceptionalConnector posts reports to the exceptional.io API.
  */
 public class ExceptionalConnector
 {
+	boolean enabled;
 	String urlPattern;
 	String apiKey;
 	ExceptionalReportFormatter reportFormatter;
@@ -27,9 +28,22 @@ public class ExceptionalConnector
 	// Logging via some abstract plug-in might perpetuate an endless cycle.  Well, there's always...
 	PrintStream log;
 
+	/**
+	 * Post an exception to the exceptional.io API.
+	 * @param exception    the exception to post
+	 */
+    public void post(final Exception exception)
+	{
+		post(new ExceptionalReportBuilder(exception).build());
+	}
+
+	/**
+	 * Post a general report to the exceptional.io API.
+	 * @param report    the report to post
+	 */
     public void post(final ExceptionalReport report)
 	{
-        if (!throttle(report)) {
+        if (enabled && !throttle(report)) {
 			executorService.submit(new Runnable() {
 				@Override
 				public void run() {

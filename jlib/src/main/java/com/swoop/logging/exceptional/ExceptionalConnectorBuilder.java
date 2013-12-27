@@ -63,6 +63,7 @@ public class ExceptionalConnectorBuilder
 			throw new IllegalStateException("apiKey unset");
 		}
 		ExceptionalConnector connector = new ExceptionalConnector();
+		connector.enabled = true;
 		connector.urlPattern = urlPattern;
 		connector.apiKey = apiKey;
 		connector.reportFormatter = reportFormatter == null ? new ExceptionalReportFormatter() : reportFormatter;
