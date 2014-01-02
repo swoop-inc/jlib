@@ -80,16 +80,34 @@ public class ExceptionalReportFormatter
 	{
 		final JSONObject exceptionData = new JSONObject();
 		// Required:
-		put(exceptionData, "message", report.getMessage());
-		put(exceptionData, "exception_class", report.getExceptionClass());
-		put(exceptionData, "backtrace", toJsonArray(report.getBacktrace()));
 		put(exceptionData, "occurred_at", getIso8601Time());
 		// Extensions:
 		put(exceptionData, "log_level", report.getLogLevel());
-		put(exceptionData, "method_name", report.getMethodName());
-		put(exceptionData, "line_number", report.getLineNumber());
 		put(exceptionData, "thread_name", report.getThreadName());
+		ExceptionalReport.Error[] errors = report.getErrors();
+		if (errors.length > 0) {
+			addErrorData(errors[0], exceptionData);
+			if (errors.length > 1) {
+				JSONArray errorArray = new JSONArray();
+				put(exceptionData, "causes", errorArray);
+				for (int i = 1; i < errors.length; ++i) {
+					errorArray.add(addErrorData(errors[i], new JSONObject()));
+				}
+			}
+		}
 		return exceptionData;
+	}
+
+	private JSONObject addErrorData(final ExceptionalReport.Error error, final JSONObject errorData)
+	{
+		// Required:
+		put(errorData, "message", error.getMessage());
+		put(errorData, "exception_class", error.getExceptionClass());
+		put(errorData, "backtrace", toJsonArray(error.getBacktrace()));
+		// Extensions:
+		put(errorData, "method_name", error.getMethodName());
+		put(errorData, "line_number", error.getLineNumber());
+		return errorData;
 	}
 
 	public String getIso8601Time()
