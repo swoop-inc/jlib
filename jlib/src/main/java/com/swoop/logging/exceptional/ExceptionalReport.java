@@ -5,11 +5,16 @@ package com.swoop.logging.exceptional;
  */
 public interface ExceptionalReport
 {
-	public String getMessage();
 	public String getLogLevel();
-	public String getMethodName();
-	public String getLineNumber();
 	public String getThreadName();
-	public String getExceptionClass();
-	public String[] getBacktrace();
+	public Error[] getErrors();
+
+	public static interface Error
+	{
+		public String getMessage();
+		public String getMethodName();
+		public String getLineNumber();
+		public String getExceptionClass();
+		public String[] getBacktrace();
+	}
 }

@@ -1,5 +1,8 @@
 package com.swoop.logging.exceptional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Create an item that can serve as the payload of a report to the Exceptional.io server.
  */
@@ -10,7 +13,6 @@ public class ExceptionalReportBuilder
 	private String threadName;
 	private Throwable throwable;
 	private boolean synthetic;
-	private StackTraceElement[] stackTrace;
 	private String logLevel;
 
 	/**
@@ -23,7 +25,6 @@ public class ExceptionalReportBuilder
 		this.throwable = new Throwable(message);
 		this.synthetic = true;
 		throwable.fillInStackTrace();  // the current stack frame is ignored.
-		this.stackTrace = throwable.getStackTrace();
 	}
 
 	/**
@@ -34,7 +35,6 @@ public class ExceptionalReportBuilder
 	{
 		init();
 		this.throwable = throwable;
-		this.stackTrace = throwable.getStackTrace();
 	}
 
 	public ExceptionalReportBuilder setLogLevel(String logLevel)
@@ -47,15 +47,39 @@ public class ExceptionalReportBuilder
 	{
 		return new ExceptionalReport() {
 			@Override
-			public String getMessage()
-			{
-				return throwable.getMessage();
-			}
-
-			@Override
 			public String getLogLevel()
 			{
 				return logLevel;
+			}
+
+			@Override
+			public String getThreadName()
+			{
+				return threadName;
+			}
+
+			@Override
+			public ExceptionalReport.Error[] getErrors()
+			{
+				List<ExceptionalReport.Error> errorList = new ArrayList<ExceptionalReport.Error>();
+				for (Throwable thr = throwable; thr != null; thr = thr.getCause()) {
+					errorList.add(buildError(thr, synthetic && thr == throwable));
+				}
+				return errorList.toArray(new ExceptionalReport.Error[errorList.size()]);
+			}
+		};
+	}
+
+	private ExceptionalReport.Error buildError(final Throwable throwable, final boolean synthetic)
+	{
+		final StackTraceElement[] stackTrace = throwable.getStackTrace();
+
+		return new ExceptionalReport.Error()
+		{
+			@Override
+			public String getMessage()
+			{
+				return throwable.getMessage();
 			}
 
 			@Override
@@ -86,10 +110,14 @@ public class ExceptionalReportBuilder
 				return backtrace;
 			}
 
-			@Override
-			public String getThreadName()
+			private StackTraceElement getStackTraceElement(int index)
 			{
-				return threadName;
+				return stackTrace[index + (synthetic ? IGNORED_SYNTHETIC_STACK_FRAMES : 0)];
+			}
+
+			private int getStackTraceLength()
+			{
+				return stackTrace.length - (synthetic ? IGNORED_SYNTHETIC_STACK_FRAMES : 0);
 			}
 		};
 	}
@@ -97,15 +125,5 @@ public class ExceptionalReportBuilder
 	private void init()
 	{
 		this.threadName = Thread.currentThread().getName();
-	}
-
-	private StackTraceElement getStackTraceElement(int index)
-	{
-		return stackTrace[index + (synthetic ? IGNORED_SYNTHETIC_STACK_FRAMES : 0)];
-	}
-
-	private int getStackTraceLength()
-	{
-		return stackTrace.length - (synthetic ? IGNORED_SYNTHETIC_STACK_FRAMES : 0);
 	}
 }
