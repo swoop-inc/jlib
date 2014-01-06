@@ -3,7 +3,7 @@ package com.swoop.logging.exceptional;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.*;
 import static org.junit.Assert.*;
 
@@ -65,7 +65,7 @@ public class ExceptionalConnectorTest
 	@Test
 	public void testSetHttpClient()
 	{
-		HttpClient httpClient = HttpClientBuilder.create().build();
+		HttpClient httpClient = new DefaultHttpClient();
 		ExceptionalConnector connector = new ExceptionalConnectorBuilder()
 			.setApiKey("abc").setHttpClient(httpClient).build();
 		assertTrue("same http client", httpClient == connector.httpClient);

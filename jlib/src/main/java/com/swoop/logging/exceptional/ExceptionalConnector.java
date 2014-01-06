@@ -87,7 +87,7 @@ public class ExceptionalConnector
 			}
 		}
 		finally {
-			post.reset();
+			// post.reset();   // requires httpclient 4.3
 		}
 	}
 

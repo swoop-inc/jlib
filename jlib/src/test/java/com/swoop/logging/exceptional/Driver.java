@@ -2,8 +2,6 @@ package com.swoop.logging.exceptional;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
-import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 
 public class Driver
 {
@@ -22,7 +20,6 @@ public class Driver
 			.setApiKey(System.getProperty("exceptional.api.key"))
 			.setExecutorService(Executors.newSingleThreadExecutor())
 			.setReportFormatter(new ExceptionalReportFormatter())
-			.setHttpClient(HttpClientBuilder.create().build())
 			.setLog(System.out)
 			.build();
 	}
