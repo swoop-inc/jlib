@@ -22,31 +22,31 @@ import org.apache.http.util.EntityUtils;
  */
 public class ExceptionalConnector
 {
-	boolean enabled;      // must be explicitly enabled.
+	boolean enabled;	  // must be explicitly enabled.
 	String urlPattern;
 	String apiKey;
 	ExceptionalReportFormatter reportFormatter;
-    ExecutorService executorService;
-    HttpClient httpClient;
-	// Logging via some abstract plug-in might perpetuate an endless cycle.  Well, there's always...
+	ExecutorService executorService;
+	HttpClient httpClient;
+	// Logging via some abstract plug-in might perpetuate an endless cycle.	 Well, there's always...
 	PrintStream log;
 
 	/**
 	 * Post an exception to the exceptional.io API.
-	 * @param exception    the exception to post
+	 * @param exception	   the exception to post
 	 */
-    public void post(final Exception exception)
+	public void post(final Exception exception)
 	{
 		post(new ExceptionalReportBuilder(exception).build());
 	}
 
 	/**
 	 * Post a general report to the exceptional.io API.
-	 * @param report    the report to post
+	 * @param report	the report to post
 	 */
-    public void post(final ExceptionalReport report)
+	public void post(final ExceptionalReport report)
 	{
-        if (enabled && !throttle(report)) {
+		if (enabled && !throttle(report)) {
 			executorService.submit(new Runnable() {
 				@Override
 				public void run() {
@@ -58,8 +58,8 @@ public class ExceptionalConnector
 					}
 				}
 			});
-        }
-    }
+		}
+	}
 
 	// TODO: enable throttling.
 	private boolean throttle(final ExceptionalReport report)
@@ -67,34 +67,34 @@ public class ExceptionalConnector
 		return false;
 	}
 
-    private void doPost(final ExceptionalReport report)
+	private void doPost(final ExceptionalReport report)
 		throws IOException
 	{
 		final String url = String.format(urlPattern, apiKey, ExceptionalClient.PROTOCOL_VERSION);
-        log.println("POST report to " + url);
-        final HttpPost post = new HttpPost(url);
-        post.setHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
+		log.println("POST report to " + url);
+		final HttpPost post = new HttpPost(url);
+		post.setHeader(HttpHeaders.CONTENT_ENCODING, "gzip");
 		post.setEntity(new ByteArrayEntity(toByteArray(report)));
-        try {
-            final HttpResponse response = httpClient.execute(post);
-            final int statusCode = response.getStatusLine().getStatusCode();
-            if (statusCode < 200 || statusCode > 299) {
+		try {
+			final HttpResponse response = httpClient.execute(post);
+			final int statusCode = response.getStatusLine().getStatusCode();
+			if (statusCode < 200 || statusCode > 299) {
 				logErrorResponse(statusCode, response);
-            }
+			}
 			else {
 				// We always have to read the body.
 				EntityUtils.consume(response.getEntity());
 			}
-        }
+		}
 		finally {
-            post.reset();
-        }
-    }
+			post.reset();
+		}
+	}
 
 	private byte[] toByteArray(ExceptionalReport report)
 		throws IOException
 	{
-        final ByteArrayOutputStream outbuf = new ByteArrayOutputStream();
+		final ByteArrayOutputStream outbuf = new ByteArrayOutputStream();
 		final GZIPOutputStream gzip = new GZIPOutputStream(outbuf);
 		try {
 			gzip.write(reportFormatter.format(report).getBytes("UTF-8"));

@@ -17,7 +17,7 @@ public class ExceptionalReportBuilder
 
 	/**
 	 * Construct a report having the given message, instead of an associated exception.
-	 * @param message   an error message
+	 * @param message	an error message
 	 */
 	public ExceptionalReportBuilder(String message)
 	{
@@ -29,7 +29,7 @@ public class ExceptionalReportBuilder
 
 	/**
 	 * Construct a report from the given exception
-	 * @param throwable   an exception
+	 * @param throwable	  an exception
 	 */
 	public ExceptionalReportBuilder(Throwable throwable)
 	{
