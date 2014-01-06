@@ -6,12 +6,12 @@ import static org.junit.Assert.*;
 /**
  * Tests exceptional report building.
  */
-public class ExceptionalReportBuilderTest
+public class ExceptionalReportTest
 {
     @Test
 	public void testByMessage()
 	{
-		ExceptionalReport report = new ExceptionalReportBuilder("omg").build();
+		ExceptionalReport report = new ExceptionalReport("omg");
 		assertEquals("omg", report.getErrors()[0].getMessage());
 		assertNull(report.getLogLevel());
 		assertEquals("testByMessage", report.getErrors()[0].getMethodName());
@@ -29,7 +29,7 @@ public class ExceptionalReportBuilderTest
 			throw new ArrayIndexOutOfBoundsException("hooray");
 		}
 		catch (ArrayIndexOutOfBoundsException e) {
-			ExceptionalReport report = new ExceptionalReportBuilder(e).build();
+			ExceptionalReport report = new ExceptionalReport(e);
 			assertEquals("hooray", report.getErrors()[0].getMessage());
 			assertNull(report.getLogLevel());
 			assertEquals("testByException", report.getErrors()[0].getMethodName());
@@ -52,7 +52,7 @@ public class ExceptionalReportBuilderTest
 				throw new IllegalStateException("oh no", e);
 			}
 			catch (IllegalStateException e2) {
-				ExceptionalReport report = new ExceptionalReportBuilder(e2).build();
+				ExceptionalReport report = new ExceptionalReport(e2);
 				assertNull(report.getLogLevel());
 				assertNotNull(report.getThreadName());
 
@@ -76,7 +76,7 @@ public class ExceptionalReportBuilderTest
 	@Test
 	public void testLogLevel()
 	{
-		ExceptionalReport report = new ExceptionalReportBuilder("Nope!").setLogLevel("ERROR").build();
+		ExceptionalReport report = new ExceptionalReport("Nope!").setLogLevel("ERROR");
 		assertEquals("Nope!", report.getErrors()[0].getMessage());
 		assertEquals("ERROR", report.getLogLevel());
 		assertEquals("testLogLevel", report.getErrors()[0].getMethodName());

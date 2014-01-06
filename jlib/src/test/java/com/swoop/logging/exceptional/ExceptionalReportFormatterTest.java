@@ -11,7 +11,7 @@ public class ExceptionalReportFormatterTest
     @Test
 	public void testContents()
 	{
-		String report = new ExceptionalReportFormatter().format(new ExceptionalReportBuilder("omg").build());
+		String report = new ExceptionalReportFormatter().format(new ExceptionalReport("omg"));
 		assertTrue("application_environment found", report.indexOf("\"application_environment\":{") > 0);
 		assertTrue("language_version found", report.indexOf("\"language_version\":\"") > 0);
 		assertTrue("language found", report.indexOf("\"language\":\"java\"") > 0);
@@ -25,9 +25,9 @@ public class ExceptionalReportFormatterTest
     @Test
 	public void testEnvExclusion()
 	{
-		String report = new ExceptionalReportFormatter().format(new ExceptionalReportBuilder("omg").build());
+		String report = new ExceptionalReportFormatter().format(new ExceptionalReport("omg"));
 		assertTrue("USER env var found", report.indexOf("\"USER\":\"") > 0);
-		report = new ExceptionalReportFormatter().excludeFromEnv("USER").format(new ExceptionalReportBuilder("omg").build());
+		report = new ExceptionalReportFormatter().excludeFromEnv("USER").format(new ExceptionalReport("omg"));
 		assertTrue("USER env var not found", report.indexOf("\"USER\":\"") < 0);
     }
 }

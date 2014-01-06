@@ -37,7 +37,7 @@ public class ExceptionalConnector
 	 */
 	public void post(final Exception exception)
 	{
-		post(new ExceptionalReportBuilder(exception).build());
+		post(new ExceptionalReport(exception));
 	}
 
 	/**
