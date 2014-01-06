@@ -17,14 +17,14 @@ public class ExceptionalReportFormatter
 	private final static SimpleDateFormat dateFormatter =
 		new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
 
-    private Pattern envExcludePattern;
+	private Pattern envExcludePattern;
 
 	/**
 	 * Filter out environment variables whose names match the given regular expression.
 	 */
-    public ExceptionalReportFormatter excludeFromEnv(String regex)
+	public ExceptionalReportFormatter excludeFromEnv(String regex)
 	{
-        this.envExcludePattern = Pattern.compile(regex);
+		this.envExcludePattern = Pattern.compile(regex);
 		return this;
 	}
 

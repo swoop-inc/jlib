@@ -17,8 +17,8 @@ public class ExceptionalConnectorBuilder
 	private String urlPattern = DEFAULT_URL_PATTERN;
 	private String apiKey;
 	private ExceptionalReportFormatter reportFormatter;
-    private ExecutorService executorService;
-    private HttpClient httpClient;
+	private ExecutorService executorService;
+	private HttpClient httpClient;
 	private PrintStream log;
 
 	public ExceptionalConnectorBuilder setUrlPattern(String urlPattern)
@@ -57,7 +57,7 @@ public class ExceptionalConnectorBuilder
 		return this;
 	}
 
-    public ExceptionalConnector build()
+	public ExceptionalConnector build()
 	{
 		if (apiKey == null) {
 			throw new IllegalStateException("apiKey unset");
@@ -71,5 +71,5 @@ public class ExceptionalConnectorBuilder
 		connector.httpClient = httpClient == null ? HttpClientBuilder.create().build() : httpClient;
 		connector.log = log == null ? System.err : log;
 		return connector;
-    }
+	}
 }
