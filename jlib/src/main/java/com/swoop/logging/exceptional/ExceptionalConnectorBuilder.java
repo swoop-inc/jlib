@@ -4,7 +4,8 @@ import java.io.PrintStream;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
 import org.apache.http.client.HttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.DefaultHttpClient;    // for httpclient 4.1
+//import org.apache.http.impl.client.HttpClientBuilder;  // requires httpclient 4.3
 
 /**
  * Sends reports to the exceptional.io API.
@@ -68,7 +69,8 @@ public class ExceptionalConnectorBuilder
 		connector.apiKey = apiKey;
 		connector.reportFormatter = reportFormatter == null ? new ExceptionalReportFormatter() : reportFormatter;
 		connector.executorService = executorService == null ? Executors.newSingleThreadExecutor() : executorService;
-		connector.httpClient = httpClient == null ? HttpClientBuilder.create().build() : httpClient;
+		//connector.httpClient = httpClient == null ? HttpClientBuilder.create().build() : httpClient;  // requires httpclient 4.3
+		connector.httpClient = httpClient == null ? new DefaultHttpClient() : httpClient;
 		connector.log = log == null ? System.err : log;
 		return connector;
 	}
