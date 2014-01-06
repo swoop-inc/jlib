@@ -39,6 +39,6 @@ public class Driver
 
 	private void postMessage()
 	{
-		connector.post(new ExceptionalReportBuilder("this is a test").build());
+		connector.post(new ExceptionalReport("this is a test"));
 	}
 }
