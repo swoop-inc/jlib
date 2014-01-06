@@ -16,10 +16,13 @@ import org.apache.http.util.EntityUtils;
 
 /**
  * ExceptionalConnector posts reports to the exceptional.io API.
+ *
+ * The default constructor (<code>new ExceptionalConnector()</code>) constructs a non-operational connector.
+ * Use the builder class {@link ExceptionalConnectorBuilder} to construct an operational connector.
  */
 public class ExceptionalConnector
 {
-	boolean enabled;
+	boolean enabled;      // must be explicitly enabled.
 	String urlPattern;
 	String apiKey;
 	ExceptionalReportFormatter reportFormatter;
