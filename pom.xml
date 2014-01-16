@@ -11,6 +11,7 @@
 	<url>http://maven.apache.org</url>
 
 	<modules>
+		<module>json-validator-mojo</module>
 		<module>jlib</module>
 		<module>mongodb-integration</module>
 		<module>redis-integration</module>
