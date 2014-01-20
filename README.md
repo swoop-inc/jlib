@@ -10,5 +10,5 @@ Java utilities library, developed by Swoop.
 
 ## Testing
 
-`mvn test` - execute unit tests
-`mvn verify` - execute integration tests
+- `mvn test`: execute unit tests
+- `mvn verify`: execute integration tests
