@@ -9,14 +9,13 @@ import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 
 /**
- * A MongoDB find command that returns its results in a list.
+ * A MongoDB command that returns a single document, or null.
  */
 public class FindOneCommand<T>
 	implements MongoCollectionCommand<T>
 {
 	private DBObject query;
 	@SuppressWarnings("unused")
-	private DBObject filter;
 	private DBObject projection;
 	private Postprocessor<T> postprocessor;
 
