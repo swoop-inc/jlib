@@ -3,11 +3,17 @@ package com.swoop.util.random;
 public class RiggedRandomNumberGenerator
 	implements RandomNumberGenerator
 {
-	private double value;
+	private double[] values;
+	private int index;
 
 	public RiggedRandomNumberGenerator(double value)
 	{
-		this.value = value;
+		this.values = new double[] { value };
+	}
+
+	public RiggedRandomNumberGenerator(double[] values)
+	{
+		this.values = values;
 	}
 	
 	@Override
@@ -18,7 +24,7 @@ public class RiggedRandomNumberGenerator
 	@Override
 	public int nextInt()
 	{
-		return (int)(value * Integer.MAX_VALUE);
+		return (int)(nextDouble() * Integer.MAX_VALUE);
 	}
 
 	@Override
@@ -30,6 +36,8 @@ public class RiggedRandomNumberGenerator
 	@Override
 	public double nextDouble()
 	{
-		return value;
+		double result = values[index];
+		index = (index + 1) % values.length;
+		return result;
 	}
 }	  
