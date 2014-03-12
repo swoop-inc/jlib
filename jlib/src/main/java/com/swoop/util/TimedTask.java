@@ -16,18 +16,21 @@ public abstract class TimedTask<T> implements Runnable
 	private T					result		= null;
 	private Exception			exception	= null;
 	private volatile boolean	expired		= false;
+	private volatile boolean	done		= false;
 
 	public T execute(int time) throws IOException
 	{
 		AsyncExecutor.runTask(this);
 		synchronized (this) {
 			if (result == null && exception == null) {
+				long now = System.currentTimeMillis();
 				try {
 					wait(time);
-					expired = true;
 				}
 				catch (InterruptedException e) {
 				}
+				done = true;
+				expired = System.currentTimeMillis() - now > time;
 			}
 		}
 		if (exception != null) {
@@ -49,7 +52,7 @@ public abstract class TimedTask<T> implements Runnable
 	public void run()
 	{
 		// no need to synchronize here
-		if (expired)
+		if (done)
 			return;
 
 		try {
