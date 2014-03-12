@@ -1,25 +1,27 @@
 package com.swoop.data.mongo;
 
 import java.io.IOException;
+import java.util.Date;
 
 import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 
 public class FetchCommand
-		implements MongoCollectionCommand<DBCursor>
+		implements MongoCollectionCommand<Date>
 {
-	private DBObject	fetch;
+	private DBObject		fetch;
+	private FetchProcessor	processor;
 
-	public FetchCommand(DBObject query)
+	public FetchCommand(DBObject query, FetchProcessor processor)
 	{
 		fetch = query;
+		this.processor = processor;
 	}
 
 	@Override
-	public DBCursor execute(DBCollection dbCollection) throws MongoException, IOException
+	public Date execute(DBCollection dbCollection) throws MongoException, IOException
 	{
-		return dbCollection.find(fetch);
+		return processor.process(dbCollection.find(fetch));
 	}
 }
