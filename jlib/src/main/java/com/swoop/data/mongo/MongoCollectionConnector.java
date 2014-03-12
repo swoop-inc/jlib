@@ -112,10 +112,13 @@ public class MongoCollectionConnector
 	 * 
 	 * @see #setKeyField(String)
 	 */
-	public FindOneCommand<?> createTimedFindOneCommand(Object keyValue, int timeout)
+	public TimedFindOneCommand createTimedFindOneCommand(Object keyValue, int timeout)
 	{
-		FindOneCommand<?> findOneCommand = new TimedFindOneCommand(timeout);
-		findOneCommand = keyField == null ? findOneCommand.queryId(keyValue) : findOneCommand.queryField(keyField, keyValue);
+		TimedFindOneCommand findOneCommand = new TimedFindOneCommand(timeout);
+		if (keyField == null)
+			findOneCommand.queryId(keyValue);
+		else
+			findOneCommand.queryField(keyField, keyValue);
 		return findOneCommand;
 	}
 

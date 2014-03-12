@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class RedisConnector
 	implements IRedisConnector
 {
-	protected final Logger logger = LoggerFactory.getLogger(this.getClass());
+	protected final static Logger logger = LoggerFactory.getLogger(RedisConnector.class);
 	protected final AtomicLong sequenceNumber = new AtomicLong(0);
 	
 	private RedisConnectorConfig config;

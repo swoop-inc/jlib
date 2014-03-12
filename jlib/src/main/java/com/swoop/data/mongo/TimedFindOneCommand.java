@@ -14,7 +14,9 @@ public class TimedFindOneCommand extends DefaultFindOneCommand
 {
 	// default is no timeout -- 0
 	private int				timeOut	= 0;
-	private final Logger	logger	= LoggerFactory.getLogger(this.getClass());
+	private final static Logger	logger	= LoggerFactory.getLogger(TimedFindOneCommand.class);
+
+	private boolean			isTimedOut	= false;
 
 	public TimedFindOneCommand(int timeout)
 	{
@@ -46,7 +48,7 @@ public class TimedFindOneCommand extends DefaultFindOneCommand
 	public DBObject execute(final DBCollection dbCollection)
 		throws MongoException, IOException
 	{
-		DBObject dbo = new TimedTask<DBObject>() {
+		TimedTask<DBObject> timedTask = new TimedTask<DBObject>() {
 			@Override
 			public DBObject doTask() throws IOException
 			{
@@ -57,8 +59,17 @@ public class TimedFindOneCommand extends DefaultFindOneCommand
 					logger.error("MongoDB {}: took {}ms", dbCollection.getName(), "" + time);
 				return result;
 			}
-		}.execute(timeOut);
+		};
+
+		DBObject dbo = timedTask.execute(timeOut);
+		isTimedOut = timedTask.isTimedOut();
+
 		return dbo;
+	}
+
+	public boolean isTimedOut()
+	{
+		return isTimedOut;
 	}
 
 	private DBObject internalExecute(DBCollection dbCollection) throws MongoException, IOException

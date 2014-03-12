@@ -40,6 +40,11 @@ public abstract class TimedTask<T> implements Runnable
 
 	public abstract T doTask() throws IOException;
 
+	public boolean isTimedOut()
+	{
+		return expired;
+	}
+
 	@Override
 	public void run()
 	{
