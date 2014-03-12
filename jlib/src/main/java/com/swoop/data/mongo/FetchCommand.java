@@ -11,9 +11,9 @@ public class FetchCommand
 		implements MongoCollectionCommand<Date>
 {
 	private DBObject		fetch;
-	private FetchProcessor	processor;
+	private FetchProcessor<Date>	processor;
 
-	public FetchCommand(DBObject query, FetchProcessor processor)
+	public FetchCommand(DBObject query, FetchProcessor<Date> processor)
 	{
 		fetch = query;
 		this.processor = processor;
