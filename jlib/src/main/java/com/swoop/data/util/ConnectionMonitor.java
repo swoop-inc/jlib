@@ -56,7 +56,8 @@ public class ConnectionMonitor<H>
 	{
 		switch (useCount) {
 		case 0:
-			throw new IllegalStateException("useCount");
+			// connection not used - may happen when use() failed
+			break;
 		case 1:
 			--useCount;
 			startIdleTimeout();

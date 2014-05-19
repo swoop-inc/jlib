@@ -1,12 +1,13 @@
 package com.swoop.data.redis;
 
+import com.google.common.base.Preconditions;
 import com.swoop.data.util.Connection;
 import com.swoop.data.util.ConnectionMonitor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import redis.clients.jedis.exceptions.JedisException;
+
 import java.io.IOException;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicLong;
@@ -18,7 +19,7 @@ public class RedisConnector
 	implements IRedisConnector
 {
 	protected final static Logger logger = LoggerFactory.getLogger(RedisConnector.class);
-	protected final AtomicLong sequenceNumber = new AtomicLong(0);
+	protected static final AtomicLong sequenceNumber = new AtomicLong(0);
 	
 	private RedisConnectorConfig config;
 	private Stack<ConnectionMonitor<SwoopBinaryJedisCommands>> available
@@ -59,10 +60,14 @@ public class RedisConnector
 
 	private RedisConnector(Redis redis, RedisConnectorConfig config)
 	{
+		Preconditions.checkArgument(config.getConcurrency() > 0, "Concurrency cannot be 0");
+
 		this.config = config.copy();
 		for (int i = 0; i < config.getConcurrency(); ++i) {
 			available.push(redis.monitorConnection(new RedisConnection(this.config)));
 		}
+
+		logger.debug("Initialized pool size {}", available.size());
 	}
 
 	/**
@@ -72,6 +77,8 @@ public class RedisConnector
 	{
 		this.config = new RedisConnectorConfig();
 		available.push(new ConnectionMonitor<SwoopBinaryJedisCommands>(connection));
+
+		logger.debug("Initialized pool size {}", available.size());
 	}
 
 	/**
@@ -82,15 +89,20 @@ public class RedisConnector
 		throws IOException
 	{
 		long sqn = sequenceNumber.getAndIncrement();
-		logger.debug("BEGIN seqN={} redis={} execute command={}", sqn, this, command);
+		logger.debug("BEGIN seqN={} redis={} command={}", sqn, this, command);
 		
 		try {
 			ConnectionMonitor<SwoopBinaryJedisCommands> conn = waitForConnection();
-			SwoopBinaryJedisCommands jedis = conn.use();
 			try {
+				SwoopBinaryJedisCommands jedis = conn.use();
+
+				logger.debug("Before executing seqN={} command", sqn);
+
 				return command.execute(jedis);
 			}
 			finally {
+				logger.debug("Return to pool seqN={} command", sqn);
+
 				reuseConnection(conn);
 			}
 		}
@@ -98,7 +110,7 @@ public class RedisConnector
 			// Wrap all exceptions thrown by the driver in IOExceptions.
 			throw new IOException(this + ": " + command + ": data transfer error", e);
 		} finally {
-			logger.debug("END seqN={} redis run command", sqn);
+			logger.debug("END seqN={} command", sqn);
 		}
 	}
 
@@ -124,10 +136,14 @@ public class RedisConnector
 	
 	private void reuseConnection(ConnectionMonitor<SwoopBinaryJedisCommands> conn)
 	{
+		logger.debug("Reuse connection {}", conn);
+
 		conn.release();
 		synchronized (available) {
 			available.push(conn);
 			available.notifyAll();
+
+			logger.debug("Pool size {}", available.size());
 		}
 	}
 }
