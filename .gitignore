@@ -4,7 +4,6 @@ target/
 .DS_Store
 *.swp
 .classpath
-.project
 jlib/.settings/
 jlib/eclipse/
 mongodb-integration/.settings/

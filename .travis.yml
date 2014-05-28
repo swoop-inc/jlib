@@ -1,0 +1,60 @@
+language: java
+
+jdk:
+  - oraclejdk7
+
+cache:
+  directories:
+    - $HOME/.m2
+
+# Don't build branches/tags that match this regex. It's the convention used
+# for tagging releases, which should be already tested before tagging.
+branches:
+  except:
+    - /^v[0-9]/
+
+env:
+  global:
+    - SWOOP_MAJOR_VERSION=1
+    - SWOOP_RELEASE_BRANCH=travis-ci
+
+    - REDIS_VERSION="2.8.9"
+    - MONGODB_VERSION="2.2.7"
+
+    - SWOOP_PROJECT_VERSION="$SWOOP_MAJOR_VERSION.$TRAVIS_BUILD_NUMBER"
+    - SWOOP_BIN_PATH="$TRAVIS_BUILD_DIR/bin"
+
+    # Belongs to the "travis-maven" IAM user
+    - secure: "MYRyf6+lptnUpWdPZB3wfaSu9SuaRBqUKXS4RfV0HzwgNzuLP4w92gsKlg5U6pHLCPkz2J0yIdaM98k6dtURSd9yCNTO5rVaw7x5kpcTWcy7AslGkvz4rejTz0zN5LO9EVWGP+CACjzOgYzIO0oe0HiPXydnvOfkZ4n/ogHQQFA="
+    - secure: "W2QpzxxGUIvAD9KeGaNRRAMx/J+xwCY3cxM5YNkdsXidXZ83XL//QSH28yMrVMaoXBZKQkeU1surOjQy8P81D5wfLZqWCT9m9QVsaK2Qc+7Q34ZN7wAsMfRt+TStVi7IonWSt6V6hG1ieqc+iWags/hasWOlvnbxFDl342tg+TQ="
+    # Github access token belonging to shopximity-ci user
+    - secure: "vpQhTtmjhpb75sYYHYV84wtZYi6Hh330WnnCi+HfhO4UE3PCkeHYClqwUtbObWUNn9yp8aM3rixQcCCt8AzuMD+gdVmH1xmBV+rNUBJi/kETf7XbmM7CB3B6YbsBR4B0ccdeX66xdI8vzgNe7BH9qptnXKToxOPJuDd8nzeyJIk="
+
+before_install:
+  - export PATH=$SWOOP_BIN_PATH:$PATH
+  - chmod a+x .travis-dependencies.sh
+  - ./.travis-dependencies.sh
+
+# Set the Maven version to have the minor version be the Travis build number
+before_script: "mvn versions:set -DnewVersion=${SWOOP_PROJECT_VERSION}"
+
+script: mvn verify
+
+##
+# Deployment to S3 bucket
+##
+
+after_success:
+  # Where the deployment actually happens. Will only deploy off the specified branch.
+  - >
+    [ ${TRAVIS_PULL_REQUEST} = 'false' -a ${TRAVIS_BRANCH} = ${SWOOP_RELEASE_BRANCH} ] &&
+    wget https://s3.amazonaws.com/swoop-maven/settings.xml -O /tmp/swoop-maven-settings.xml &&
+    mvn -DskipTests=true deploy --settings /tmp/swoop-maven-settings.xml
+
+  # Tag the release in Github
+  - >
+    [ ${TRAVIS_PULL_REQUEST} = 'false' -a ${TRAVIS_BRANCH} = ${SWOOP_RELEASE_BRANCH} ] &&
+    curl -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GITHUB_TOKEN}" -X POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/git/refs" -d '{
+      "ref": "refs/tags/v'"${SWOOP_PROJECT_VERSION}"'",
+      "sha": "'"${TRAVIS_COMMIT}"'"
+    }'
