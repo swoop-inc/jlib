@@ -16,7 +16,7 @@ branches:
 env:
   global:
     - SWOOP_MAJOR_VERSION=1
-    - SWOOP_RELEASE_BRANCH=travis-ci
+    - SWOOP_RELEASE_BRANCH=master
 
     - REDIS_VERSION="2.8.9"
     - MONGODB_VERSION="2.2.7"
