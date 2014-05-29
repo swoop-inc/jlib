@@ -59,14 +59,6 @@
 			<id>swoop.public_release</id>
 			<url>s3://swoop-maven/public-release</url>
 		</repository>
-		<site>
-			<id>swoop.site</id>
-			<url>s3://swoop-maven/site</url>
-		</site>
-		<snapshotRepository>
-			<id>swoop.snapshot</id>
-			<url>s3://swoop-maven/snapshot</url>
-		</snapshotRepository>
 	</distributionManagement>
 
 	<reporting>
