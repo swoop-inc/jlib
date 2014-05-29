@@ -13,14 +13,14 @@ import org.apache.maven.plugin.MojoFailureException;
 public class JsonValidatorMojo extends AbstractMojo
 {
 	/**
-	 * @parameter expression="${project}"
+	 * @parameter property="project"
 	 * @required
 	 * @readonly
 	 */
 	MavenProject project;
 
 	/**
-	 * @parameter expression="${basedir}"
+	 * @parameter property="basedir"
 	 * @required
 	 * @readonly
 	 */
