@@ -1,10 +1,6 @@
 package com.swoop.data.mongo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.MongoException;
-import com.mongodb.WriteResult;
+import com.mongodb.*;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -13,8 +9,7 @@ import java.util.Map;
 /**
  * A MongoDB update command.
  */
-public class UpdateCommand
-	implements MongoCollectionCommand<WriteResult>
+public class UpdateCommand extends DefaultMongoCollectionCommand<WriteResult>
 {
 	private DBObject query = new BasicDBObject();
 	private DBObject object = new BasicDBObject();

@@ -1,10 +1,6 @@
 package com.swoop.data.mongo;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBObject;
-import com.mongodb.MongoException;
-import com.mongodb.WriteResult;
+import com.mongodb.*;
 
 import java.io.IOException;
 import java.util.Map;
@@ -12,8 +8,7 @@ import java.util.Map;
 /**
  * A MongoDB insert command.
  */
-public class InsertCommand
-	implements MongoCollectionCommand<WriteResult>
+public class InsertCommand extends DefaultMongoCollectionCommand<WriteResult>
 {
 	private DBObject object = new BasicDBObject();
 

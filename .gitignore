@@ -8,3 +8,5 @@ jlib/.settings/
 jlib/eclipse/
 mongodb-integration/.settings/
 redis-integration/.settings/
+*.iml
+pom.xml.versionsBackup

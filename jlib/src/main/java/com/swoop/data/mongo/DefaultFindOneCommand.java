@@ -5,9 +5,7 @@ import com.mongodb.DBObject;
 /**
  * A FindOneCommand that does no postprocessing, initially.
  */
-public class DefaultFindOneCommand
-	extends FindOneCommand<DBObject>
-	implements MongoCollectionCommand<DBObject>
+public class DefaultFindOneCommand extends FindOneCommand<DBObject>
 {
 	private final static Postprocessor<DBObject> DEFAULT_POSTPROCESSOR = new DefaultPostprocessor();
 

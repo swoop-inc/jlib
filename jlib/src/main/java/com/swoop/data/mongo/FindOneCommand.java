@@ -1,18 +1,17 @@
 package com.swoop.data.mongo;
 
-import java.io.IOException;
-import java.util.Map;
-
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 
+import java.io.IOException;
+import java.util.Map;
+
 /**
  * A MongoDB command that returns a single document, or null.
  */
-public class FindOneCommand<T>
-	implements MongoCollectionCommand<T>
+public class FindOneCommand<T> extends DefaultMongoCollectionCommand<T>
 {
 	private DBObject query;
 	@SuppressWarnings("unused")
@@ -106,4 +105,15 @@ public class FindOneCommand<T>
 			projection = new BasicDBObject();
 		}
 	}
+
+	public DBObject getQuery()
+	{
+		return query;
+	}
+
+	public DBObject getProjection()
+	{
+		return projection;
+	}
+
 }

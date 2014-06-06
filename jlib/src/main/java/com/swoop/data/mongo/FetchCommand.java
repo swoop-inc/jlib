@@ -1,14 +1,13 @@
 package com.swoop.data.mongo;
 
-import java.io.IOException;
-import java.util.Date;
-
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.MongoException;
 
-public class FetchCommand
-		implements MongoCollectionCommand<Date>
+import java.io.IOException;
+import java.util.Date;
+
+public class FetchCommand extends DefaultMongoCollectionCommand<Date>
 {
 	private DBObject		fetch;
 	private FetchProcessor<Date>	processor;
@@ -24,4 +23,5 @@ public class FetchCommand
 	{
 		return processor.process(dbCollection.find(fetch));
 	}
+
 }

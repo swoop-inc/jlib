@@ -1,15 +1,18 @@
 package com.swoop.data.mongo;
 
 import java.io.IOException;
+import java.util.Map;
 
+import com.google.common.collect.ImmutableMap;
 import com.mongodb.DB;
+import com.swoop.data.DatastoreStats;
 import com.swoop.data.util.Connection;
 
 /**
  * A MongoDB connector with an implicit collection name. 
  */
 public class MongoCollectionConnector
-	extends MongoConnector
+		extends MongoConnector implements DatastoreStats
 {
 	private String collectionName;
 	private String keyField;
@@ -127,4 +130,11 @@ public class MongoCollectionConnector
 	{
 		return super.toString() + "/" + collectionName;
 	}
+
+	@Override
+	public Map<String, Object> getStats()
+	{
+		return ImmutableMap.of(STAT_TYPE_KEY, (Object)getClass().getName().toString());
+	}
+
 }

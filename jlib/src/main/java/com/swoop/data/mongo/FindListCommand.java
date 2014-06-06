@@ -1,22 +1,17 @@
 package com.swoop.data.mongo;
 
+import com.mongodb.*;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import com.mongodb.BasicDBObject;
-import com.mongodb.DBCollection;
-import com.mongodb.DBCursor;
-import com.mongodb.DBObject;
-import com.mongodb.MongoException;
-
 /**
  * A MongoDB find command that returns its results in a list.
  */
-public class FindListCommand<T>
-	implements MongoCollectionCommand<List<T>>
+public class FindListCommand<T> extends DefaultMongoCollectionCommand<List<T>>
 {
 	private DBObject query;
 	private DBObject projection;
@@ -116,4 +111,5 @@ public class FindListCommand<T>
 			projection = new BasicDBObject();
 		}
 	}
+
 }

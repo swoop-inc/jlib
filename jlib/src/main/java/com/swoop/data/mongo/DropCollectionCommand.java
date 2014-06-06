@@ -6,8 +6,7 @@ import com.mongodb.MongoException;
 /**
  * MongoDB "drop collection" command.
  */
-public class DropCollectionCommand
-	implements MongoCollectionCommand<Void>
+public class DropCollectionCommand extends DefaultMongoCollectionCommand<Void>
 {
 	@Override
 	public Void execute(DBCollection dbCollection)
@@ -16,4 +15,5 @@ public class DropCollectionCommand
 		dbCollection.drop();
 		return null;
 	}
+
 }
