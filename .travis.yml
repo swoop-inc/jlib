@@ -45,15 +45,12 @@ script: mvn verify
 ##
 
 after_success:
-  # Where the deployment actually happens. Will only deploy off the specified branch.
+  # Where the deployment actually happens. Will only deploy off the specified
+  # branch, and tag the version in Github
   - >
     [ ${TRAVIS_PULL_REQUEST} = 'false' -a ${TRAVIS_BRANCH} = ${SWOOP_RELEASE_BRANCH} ] &&
     wget https://s3.amazonaws.com/swoop-maven/settings.xml -O /tmp/swoop-maven-settings.xml &&
-    mvn -DskipTests=true deploy --settings /tmp/swoop-maven-settings.xml
-
-  # Tag the release in Github
-  - >
-    [ ${TRAVIS_PULL_REQUEST} = 'false' -a ${TRAVIS_BRANCH} = ${SWOOP_RELEASE_BRANCH} ] &&
+    mvn -DskipTests=true deploy --settings /tmp/swoop-maven-settings.xml &&
     curl -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${GITHUB_TOKEN}" -X POST "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/git/refs" -d '{
       "ref": "refs/tags/v'"${SWOOP_PROJECT_VERSION}"'",
       "sha": "'"${TRAVIS_COMMIT}"'"
