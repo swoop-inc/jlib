@@ -1,11 +1,14 @@
 package com.swoop.data;
 
 /**
- *
+ * Interface for defining settings/functions for caching functionality.
  */
 public interface CacheSettings
 {
 
+	/**
+	 * Defines an expiration time, in seconds, for cached objects
+	 */
 	public int getTtl();
 
 	/**
