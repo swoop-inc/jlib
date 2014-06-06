@@ -73,6 +73,11 @@ public class MemcachedMongoCollectionConnector
 		this.ttl = ttl;
 	}
 
+	public MemcachedClient getClient()
+	{
+		return client;
+	}
+
 	public String getCachePrefix()
 	{
 		return cachePrefix;
