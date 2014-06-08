@@ -3,7 +3,7 @@ package com.swoop.data;
 /**
  * Interface for defining settings/functions for caching functionality.
  */
-public interface CacheSettings
+public interface CacheOperations
 {
 
 	/**
@@ -22,5 +22,13 @@ public interface CacheSettings
 	 * @return the equivalent cache key for the given resource key
 	 */
 	public String getCacheKey(String resourceKey);
+
+	/**
+	 * Invalidate a cache entry. Make sure to do the proper transform from
+	 * resourceKey to cacheKey via {@link #getCacheKey(String)} if needed.
+	 *
+	 * @param cacheKey the key used to access the cache item
+	 */
+	public void invalidate(String cacheKey);
 
 }

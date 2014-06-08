@@ -6,7 +6,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheStats;
 import com.google.common.collect.Maps;
-import com.swoop.data.CacheSettings;
+import com.swoop.data.CacheOperations;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * entries to be written into the cache.
  */
 public class MemoryMongoCollectionConnector
-		extends MongoCollectionConnector implements CacheSettings
+		extends MongoCollectionConnector implements CacheOperations
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			MemoryMongoCollectionConnector.class);
@@ -69,6 +69,12 @@ public class MemoryMongoCollectionConnector
 	{
 		// Doesn't need to transform the key since this is a cache specific to this connector
 		return resourceKey;
+	}
+
+	@Override
+	public void invalidate(String cacheKey)
+	{
+		cache.invalidate(cacheKey);
 	}
 
 	@Override

@@ -4,7 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.collect.Maps;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
-import com.swoop.data.CacheSettings;
+import com.swoop.data.CacheOperations;
 import com.swoop.framework.InitializationException;
 import net.spy.memcached.AddrUtil;
 import net.spy.memcached.MemcachedClient;
@@ -24,7 +24,7 @@ import java.util.concurrent.TimeUnit;
  * for it to write an entry into the cache.
  */
 public class MemcachedMongoCollectionConnector
-		extends MongoCollectionConnector implements CacheSettings
+		extends MongoCollectionConnector implements CacheOperations
 {
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			MemcachedMongoCollectionConnector.class);
@@ -103,6 +103,12 @@ public class MemcachedMongoCollectionConnector
 	public String getCacheKey(String resourceKey)
 	{
 		return getCachePrefix() + resourceKey;
+	}
+
+	@Override
+	public void invalidate(String cacheKey)
+	{
+		getClient().delete(cacheKey);
 	}
 
 	@Override
