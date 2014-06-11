@@ -196,10 +196,10 @@ public class MemcachedMongoCollectionConnector
 		return 0L;
 	}
 
-	private String getRatio(long hits, long misses)
+	private double getRatio(long hits, long misses)
 	{
 		long total = hits + misses;
-		return Double.toString((double) hits / (double) total);
+		return (total != 0L) ? ((double) hits / (double) total) : 0.0;
 	}
 
 }
