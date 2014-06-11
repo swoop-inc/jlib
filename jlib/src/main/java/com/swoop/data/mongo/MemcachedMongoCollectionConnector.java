@@ -29,6 +29,15 @@ public class MemcachedMongoCollectionConnector
 	private static final Logger LOGGER = LoggerFactory.getLogger(
 			MemcachedMongoCollectionConnector.class);
 
+	/** Key in the memcached stats for the number of get hits */
+	private static final String GET_HITS_KEY = "get_hits";
+
+	/** Key in the memcached stats for the number of get misses */
+	private static final String GET_MISSES_KEY = "get_misses";
+
+	/** This classe's calculated hit ratio based on stats from memcached */
+	private static final String AGGREGATE_GET_HIT_RATIO = "get_hit_ratio";
+
 	private final MemcachedClient client;
 
 	/** Expiration time, in seconds, of cached values */
@@ -152,16 +161,45 @@ public class MemcachedMongoCollectionConnector
 	@Override
 	public Map<String, Object> getStats()
 	{
-		Map<String, Object> stats = Maps.newLinkedHashMap();
-		stats.put(STAT_TYPE_KEY, getClass().getName().toString());
+		Map<String, Object> memcachedStats = Maps.newLinkedHashMap();
+		long aggGetHits = 0L;
+		long aggGetMisses = 0L;
 
 		Map<SocketAddress, Map<String, String>> memcacheStats = client.getStats();
 		if (memcacheStats != null) {
 			for (Map.Entry<SocketAddress, Map<String, String>> entry : memcacheStats.entrySet()) {
-				stats.put(entry.getKey().toString(), entry.getValue());
+				memcachedStats.put(entry.getKey().toString(), entry.getValue());
+				aggGetHits += getLong(entry.getValue(), GET_HITS_KEY);
+				aggGetMisses += getLong(entry.getValue(), GET_MISSES_KEY);
 			}
 		}
+
+		// Constructed this way so that the ordering has the aggregate stats
+		// as the first elements (when traversing the Map)
+		Map<String, Object> stats = Maps.newLinkedHashMap();
+		stats.put(STAT_TYPE_KEY, getClass().getName().toString());
+		stats.put(AGGREGATE_GET_HIT_RATIO, getRatio(aggGetHits, aggGetMisses));
+		stats.putAll(memcachedStats);
 		return stats;
+	}
+
+	private long getLong(Map<String, String> stats, String key)
+	{
+		String value = stats.get(key);
+		if (value != null) {
+			try {
+				return Long.parseLong(value);
+			} catch (NumberFormatException e) {
+				// ignored
+			}
+		}
+		return 0L;
+	}
+
+	private String getRatio(long hits, long misses)
+	{
+		long total = hits + misses;
+		return Double.toString((double) hits / (double) total);
 	}
 
 }
