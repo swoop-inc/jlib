@@ -27,7 +27,7 @@ public class FindListCommand<T> extends DefaultMongoCollectionCommand<List<T>>
 		this(source.query, source.projection, postprocessor);
 	}
 
-	private FindListCommand(DBObject query, DBObject projection, Postprocessor<T> postprocessor)
+	public FindListCommand(DBObject query, DBObject projection, Postprocessor<T> postprocessor)
 	{
 		this.query = query;
 		this.projection = projection;
