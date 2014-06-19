@@ -24,6 +24,8 @@ env:
     - SWOOP_PROJECT_VERSION="$SWOOP_MAJOR_VERSION.$TRAVIS_BUILD_NUMBER"
     - SWOOP_BIN_PATH="$TRAVIS_BUILD_DIR/bin"
 
+    # Swoop maven mirror
+    - secure: "IDwGjx8FBTm3Hxhd384iXTpgFwt44/Mn/cakir4qJCgOMuBH7bQpNFia8iwFXFyQnFvI8ckY55Rvyrq15VQLfIwuXYZNUiHoklbXy05Z6LQ5i9FyRGszrO5+Yu8xxuyuqRMIw7l5eK3nDRsFtMR1yM+rKVxlLDxWAW0E1sDOw0g="
     # Belongs to the "travis-maven" IAM user
     - secure: "MYRyf6+lptnUpWdPZB3wfaSu9SuaRBqUKXS4RfV0HzwgNzuLP4w92gsKlg5U6pHLCPkz2J0yIdaM98k6dtURSd9yCNTO5rVaw7x5kpcTWcy7AslGkvz4rejTz0zN5LO9EVWGP+CACjzOgYzIO0oe0HiPXydnvOfkZ4n/ogHQQFA="
     - secure: "W2QpzxxGUIvAD9KeGaNRRAMx/J+xwCY3cxM5YNkdsXidXZ83XL//QSH28yMrVMaoXBZKQkeU1surOjQy8P81D5wfLZqWCT9m9QVsaK2Qc+7Q34ZN7wAsMfRt+TStVi7IonWSt6V6hG1ieqc+iWags/hasWOlvnbxFDl342tg+TQ="
@@ -31,6 +33,7 @@ env:
     - secure: "vpQhTtmjhpb75sYYHYV84wtZYi6Hh330WnnCi+HfhO4UE3PCkeHYClqwUtbObWUNn9yp8aM3rixQcCCt8AzuMD+gdVmH1xmBV+rNUBJi/kETf7XbmM7CB3B6YbsBR4B0ccdeX66xdI8vzgNe7BH9qptnXKToxOPJuDd8nzeyJIk="
 
 before_install:
+  - wget https://s3.amazonaws.com/swoop-maven/settings.xml -O $HOME/.m2/settings.xml
   - export PATH=$SWOOP_BIN_PATH:$PATH
   - chmod a+x .travis-dependencies.sh
   - ./.travis-dependencies.sh
