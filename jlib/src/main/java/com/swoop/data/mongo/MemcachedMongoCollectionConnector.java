@@ -1,6 +1,7 @@
 package com.swoop.data.mongo;
 
 import com.google.common.base.Optional;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Maps;
 import com.mongodb.DBObject;
 import com.mongodb.util.JSON;
@@ -40,8 +41,10 @@ public class MemcachedMongoCollectionConnector
 
 	private final MemcachedClient client;
 
-	/** Expiration time, in seconds, of cached values */
+	/** Expiration time, in seconds, of cached non-null values */
 	private final int ttl;
+	/** Expiration time, in seconds, of cached null values */
+	private final int negativeTtl;
 
 	/** Stores cache entries prefixed with the collection name and a separator */
 	private final String cachePrefix;
@@ -59,14 +62,18 @@ public class MemcachedMongoCollectionConnector
 	 * @param connectionKey mongo connection key
 	 * @param collectionName mongo collection name
 	 * @param addressString passed to the spymemcached {@link AddrUtil#getAddresses(String)}
-	 * @param ttl expiration time (in seconds) for values written into the cache
+	 * @param ttl expiration time (in seconds) for non-null values written into the cache
+	 * @param negativeTtl expiration time (in seconds) for null values written into the cache
 	 * @throws InitializationException if a connection to memcached couldn't be established
 	 */
 	public MemcachedMongoCollectionConnector(
-			String connectionKey, String collectionName, String addressString, int ttl
+			String connectionKey, String collectionName, String addressString, int ttl, int negativeTtl
 	) throws InitializationException
 	{
 		super(connectionKey, collectionName);
+
+		Preconditions.checkArgument(ttl > 0);
+		Preconditions.checkArgument(negativeTtl > 0);
 
 		this.cachePrefix = collectionName + "::";
 
@@ -80,6 +87,7 @@ public class MemcachedMongoCollectionConnector
 		}
 
 		this.ttl = ttl;
+		this.negativeTtl = negativeTtl;
 	}
 
 	public MemcachedClient getClient()
@@ -106,6 +114,12 @@ public class MemcachedMongoCollectionConnector
 	public int getTtl()
 	{
 		return ttl;
+	}
+
+	@Override
+	public int getNegativeTtl()
+	{
+		return negativeTtl;
 	}
 
 	@Override
@@ -140,9 +154,11 @@ public class MemcachedMongoCollectionConnector
 						// This is ugly, but since jlib already punches the type system in
 						// the face, let's keep doing it
 						DBObject originatingValue = (DBObject)super.executeCollectionCommand(collectionName, command);
+						// if originating value is null the serializer below will turn it into "null" string (and deserializer above will do the reverse - "null" to null)
 						cacheValue = JSON.serialize(originatingValue);
-						LOGGER.info("Cache MISS (ttl={}) {}", getTtl(), cacheKey);
-						client.set(cacheKey, getTtl(), cacheValue);
+						int ttl = originatingValue != null ? getTtl() : getNegativeTtl();
+						LOGGER.info("Cache MISS (ttl={}) {}", ttl, cacheKey);
+						client.set(cacheKey, ttl, cacheValue);
 						return (T) originatingValue;
 					}
 				} catch(Exception e) {

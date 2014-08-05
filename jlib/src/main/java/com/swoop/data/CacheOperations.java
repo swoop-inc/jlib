@@ -7,9 +7,14 @@ public interface CacheOperations
 {
 
 	/**
-	 * Defines an expiration time, in seconds, for cached objects
+	 * Defines an expiration time, in seconds, for cached non-null objects.
 	 */
 	public int getTtl();
+
+	/**
+	 * Defines an expiration time, in seconds, for cached null objects.
+	 */
+	public int getNegativeTtl();
 
 	/**
 	 * Keys used for caching can be different than the originating resource key. For example,
