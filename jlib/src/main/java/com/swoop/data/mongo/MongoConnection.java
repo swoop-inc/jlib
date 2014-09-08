@@ -1,12 +1,12 @@
 package com.swoop.data.mongo;
 
-import java.io.IOException;
-
 import com.mongodb.DB;
 import com.mongodb.Mongo;
 import com.mongodb.MongoURI;
 import com.mongodb.ReadPreference;
 import com.swoop.data.util.Connection;
+
+import java.io.IOException;
 
 /**
  * Basic MongoDB connection utility, for internal package use.
@@ -60,7 +60,7 @@ class MongoConnection
 		try {
 			if (db == null) {
 				this.mongo = uri.connect();
-				this.mongo.setReadPreference(ReadPreference.SECONDARY);
+				this.mongo.setReadPreference(ReadPreference.secondaryPreferred());
 				String database = uri.getDatabase();
 				if (database == null) {
 					throw new IOException("no DB specified");
