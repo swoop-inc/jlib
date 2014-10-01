@@ -60,7 +60,7 @@ class MongoConnection
 		try {
 			if (db == null) {
 				this.mongo = uri.connect();
-				this.mongo.setReadPreference(ReadPreference.secondaryPreferred());
+				this.mongo.setReadPreference(ReadPreference.primaryPreferred());
 				String database = uri.getDatabase();
 				if (database == null) {
 					throw new IOException("no DB specified");
